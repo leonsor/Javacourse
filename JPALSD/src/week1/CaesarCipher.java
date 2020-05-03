@@ -109,9 +109,10 @@ public class CaesarCipher {
 	
 	public void testEncryptTwoKeys() {
 		//System.out.println(this.encryptTwoKeys("First Legion", 23, 17));
-		System.out.println(this.encryptTwoKeys("At noon be in the conference room with your hat on for a surprise party. YELL LOUD!", 8, 21));
-		System.out.println(encryptTwoKeys("Top ncmy qkff vi vguv vbg ycpx", 24,6)); //Practice Quiz, Q 8. Answer: Run like wild to beat the wind
-		System.out.println(this.encryptTwoKeys("Can you imagine life WITHOUT the internet AND computers in your pocket?", 21, 8));
+		//System.out.println(this.encryptTwoKeys("At noon be in the conference room with your hat on for a surprise party. YELL LOUD!", 8, 21));
+		//System.out.println(encryptTwoKeys("Top ncmy qkff vi vguv vbg ycpx", 24,6)); //Practice Quiz, Q 8. Answer: Run like wild to beat the wind
+		//System.out.println(this.encryptTwoKeys("Can you imagine life WITHOUT the internet AND computers in your pocket?", 21, 8));
+		System.out.println(this.encryptTwoKeys("Hfs cpwewloj loks cd Hoto kyg Cyy.", 26-14, 26-24));
 	}
 	
 	/**
