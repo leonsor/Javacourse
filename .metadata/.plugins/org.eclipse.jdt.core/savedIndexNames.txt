@@ -1,0 +1,3 @@
+INDEX VERSION 1.130+D:\Users\Leon\Skydrive\Development\.metadata\.plugins\org.eclipse.jdt.core
+2863563242.index
+1898233599.index

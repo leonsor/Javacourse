@@ -1,0 +1,335 @@
+<h1>Battlecode 2013 Gameplay Specs</h1>
+<p>Below are the full gameplay specs for the 2013 competition.</p>
+<p>The specs cover the following: <a href="#plot">Plot</a>, <a href="#objective">Objective</a>, <a href="#changes-from-2012">Changes from 2012</a>, <a href="#robot-overview">Robot Overview</a>, <a href="#encampments">Encampments</a>, <a href="#robot-resources">Robot Resources</a>, <a href="#mines">Mines</a>, <a href="#upgrades">Upgrades</a>, <a href="#victory-conditions">Victory Conditions</a>, <a href="#robot-actions">Robot Actions</a>, <a href="#maps">Maps</a>, <a href="#writing-a-player">Writing a Player</a>, <a href="#execution-order">Execution Order</a>, <a href="#timing">Timing</a>, <a href="#mechanics">Mechanics</a>, <a href="#debugging">Debugging</a>, <a href="#disclaimers">Disclaimers</a>, <a href="#changelog">Changelog</a>, <a href="#appendices">Appendices</a></p>
+<h2 class="subhead"><a name="plot"></a>Plot</h2>
+<p>After being foiled yet another year by the power of fun gamers, the evil Professor Mordemort was captured and placed in the most secured cell in the Galactic Hold. Now, it is one year after those terrible events, and peace reigns supreme in the galaxy, new and faster methods of reaching far off planets being provided by Vanqeri Technologies, and the Interuniverse Defense League is stronger than ever. However, there are rumors of an unknown force that is attacking planets on the outer rim of the galaxy, an enemy that is rumored to be using ancient technology and trench warfare to gain the upper hand. The IDL is calling on Coders throughout the galaxy to help combat this unknown enemy before the devastation they are causing reaches the more populated worlds.</p>
+<h2 class="subhead"><a name="objective"></a>Objective</h2>
+<p>The objective this year is simple. Violently eliminate the opponent's HQ through a constant barrage of soldiers. There are many encampments across the map that may aid in this endeavor, allowing you to fortify positions and take map control. Should you need them, you may also research a number of upgrades that provide you with a large tactical advantage on the battlefield.</p>
+<p>Good luck!</p>
+<h2 class="subhead"><a name="changes-from-2012"></a>Changes from 2012</h2>
+<p>There are a number of large changes from previous Battlecode years, so veterans should bear these in mind:</p>
+<ul>
+    <li>Archons are out. There is one HQ that acts as the archon replacement.</li>
+    <li>Robots no longer face a direction. There is no turning, and no concept of forwards and backwards. Instead, robots can just move to any adjacent square.</li>
+    <li>There are no longer voids on the map. Every square on the map is traversable, and there is no longer any distinction between ground and air units.</li>
+    <li>Both teams start off knowing exactly what the map looks like. They know where all the map edges are and know where the enemy spawns.</li>
+    <li>There are no movement or attack delays (though some actions do still incur a cooldown). Soldiers move and attack once every turn.</li>
+    <li>Units always have shared vision and can sense anything within the vision radius of any allied unit.</li>
+    <li>Flux has been renamed to power; now it is globally shared among all of a team's units, so flux transfer has been removed.</li>
+    <li>Broadcasting has been completely altered. Both teams now write to a global array of integers. Broadcasting no longer relies on robots being within a broadcast radius.</li>
+</ul>
+<p>NOTE: Numbers in these specs are provided mainly for readability and are subject to change in future patches. Check the API for details.</p>
+<h2 class="subhead"><a name="robot-overview"></a>Robot Overview</h2>
+<p>Robots are the central part of the Battlecode world. There are two types of basic robots. Note that we use the terms &quot;robot&quot; and &quot;unit&quot; interchangeably.</p>
+<h3 class="subsubhead">HQ</h3>
+<p>The HQ is your main base, and by far the most important unit you have. Each team starts the game off with one HQ. You lose the game if your HQ is destroyed. The HQ can spawn SOLDIERs and research TECH upgrades. If the game reaches the round limit, the HQs will also begin taking end-of-round damage to break ties. The HQ can never regain energon, and there is no way to build additional HQs.</p>
+<h3 class="subsubhead">Soldier</h3>
+<p>SOLDIERs form the core of your army. They are the only mobile unit, and are created by the HQ. They allow you to expand your map control by capturing additional encampments. They can also lay mines and defuse mines. They automatically attack enemies adjacent to them every turn.</p>
+<h2 class="subhead"><a name="encampments"></a>Encampments</h2>
+<p>In addition to the two basic units, there are units called ENCAMPMENTS that soldiers can create on top of unoccupied encampment squares.</p>
+<p>If a soldier is located on an encampment square, it has the option to capture the square. If it does so, it sits still for <code>GameConstants.CAPTURE_DELAY</code> turns and then turns into one of the following encampments (it must choose which encampment to create before the delay):</p>
+<ol>
+    <li><b>Medbay</b>: Heals itself and all adjacent allied units for 2 <code>(MEDBAY.attackPower)</code> health per turn. It cannot heal the HQ.</li>
+    <li><b>Shields</b>: The shield encampment gives 5 <code>(SHIELDS.attackPower)</code> shields per turn to itself and all adjacent allied units. This shield absorbs damage from artillery fire.</li>
+    <li><b>Artillery</b>: The artillery encampment allows a unit to attack any location within its attack range <code>ARTILLERY.attackRadiusMaxSquared,</code> causing 40 <code>(ARTILLERY.attackPower)</code> damage to the attacked square, and 20 <code>(ARTILLERY.attackPower*GameConstants.ARTILLERY_SPLASH_RATIO)</code> splash damage to the adjacent squares. The artillery can damage friendly units, so watch where you fire. It can fire once every 20 <code>(ARTILLERY.attackDelay)</code> turns.</li>
+    <li><b>Generator</b>: Each generator provides the team with 10 <code>(GameConstants.GENERATOR_RESOURCE_PRODUCTION)</code> extra power per turn.</li>
+    <li><b>Supplier</b>: Each supplier allows the HQ to spawn soldiers at a faster rate. See the spawning section for details.</li>
+</ol>
+<p>The other team may retake an encampment square if the existing encampment on it is destroyed. Capturing has a cost, however. The first capture costs <code>GameConstants.CAPTURE_POWER_COST</code> to start, and each new capture costs <code>GameConstants.CAPTURE_POWER_COST</code> per encampment owned or in the process of capturing. Starting a capture costs <code>GameConstants.CAPTURE_POWER_COST*( 1 + ENCAMPMENTS_OWNED + ENCAMPMENTS_BEING_CAPTURED)</code>.</p>
+<h2 class="subhead"><a name="robot-resources"></a>Robot Resources</h2>
+<p>There are three types of resources, POWER and ENERGON, and SHIELDS.</p>
+<h3 class="subsubhead">Power</h3>
+<p>Power is shared globally across the team and is generated by the HQ at 40 power per round <code>(GameConstants.HQ_RESOURCE_PRODUCTION)</code>. 10 additional power can be generated by <code>GENERATOR encampments (GENERATOR_RESOURCE_PRODUCTION)</code>.</p>
+<p>Units pay 2 power every turn for upkeep. If enough power is not available, the unit must pay its upkeep using 5 <code>(GameConstants.UNIT_ENERGON_UPKEEP)</code> energon. If it doesn't have this much energon, it dies instantly.</p>
+<p>At the end of a robot's turn, if the bot did not use its full bytecode allocation, a fraction of the power is refunded based on bytecodes used, according to the formula <code>POWER_REFUND = (GameConstants.POWER_COST_PER_BYTECODE)*(GameConstants.BYTECODE_LIMIT-BYTECODES_SPENT)</code>. If the robot uses no bytecodes, it will only spend 1 power in upkeep this turn. If it uses 2000 bytecodes, it will spend 1.2 power in upkeep. If it uses 7500 bytecodes, it will spend 1.75 power in upkeep.</p>
+<p>Unused power is stockpiled and carried over into future rounds. However, at the end of each round, 20% (or 1% if fusion has been upgraded) of each team's power stockpile is removed due to power decay.</p>
+<h3 class="subsubhead">Energon</h3>
+<p>Energon is a robot's health. When a robot's energon hits zero, it is immediately removed from the game. Energon can only be regained by healing at a MEDBAY.</p>
+<h3 class="subsubhead">Shields</h3>
+<p>Shields are generated from the SHIELD encampment. They protect soldiers from artillery shots and mine damage. One shield point blocks one damage from an artillery shot, either direct damage or splash damage. Shields also block up to 75% <code>(GameConstants.MINE_DAMAGE_RATIO_ABSORBED_BY_SHIELD)</code> of mine damage. When a soldier takes mine damage, up to 75% of the damage taken will be reduced from shields, and the remaining mine damage will be reduced from energon.</p>
+<p>Shields decay at a constant rate of 0.5 <code>(GameConstants.SHIELD_DECAY_RATE)</code> per turn. A soldier's shield pool is bound between 0 and 100000000 <code>(GameConstants.SHIELD_CAP)</code>.</p>
+<h2 class="subhead"><a name="mines"></a>Mines</h2>
+<p>Soldiers can lay mines throughout the map to help defend territory and catch enemy robots off guard. All soldiers have the ability to lay a mine on their current square, taking 25 <code>(GameConstants.MINE_LAY_DELAY)</code> turns to do so. During this time, it cannot perform any other actions (defuse, capture, move) and does not auto-attack. If it is killed during this time, the mine does not get planted. Mines belong to a team, and will not damage robots of that team.</p>
+<p>Once a mine is planted, they stay there until they are defused. Mines do not &quot;blow up&quot; when they do damage. Enemy robots on the mined square will take 10 <code>(GameConstants.MINE_DAMAGE)</code> damage per turn, every turn they end on the mine. Only one mine can be in one square at a time; they cannot be stacked. You can try to mine squares that are already mined (either by you or the enemy), but it will just be a waste. Encampment squares can be mined, and the HQ squares can be mined also. However, only soldiers take damage from mines.</p>
+<p>Enemy mines are not visible until they are stepped on. If you try to sense a mine your opponent just laid, they will sense that there is no mine there. Once you enter the square with any soldier, all your soldiers will be able to sense that an enemy mine is there. Allied mines are always visible. Mines do not provide any sight, but you always know which squares you have mines on, and you can tell when they get defused by repeatedly sensing that square for mines.</p>
+<p>With the PICKAXE upgrade, mining is upgraded to simultaneously mining on the soldier's current square as well as the four squares orthogonally adjacent to it. This can even allow you to mine squares containing enemy robots (even their HQ).</p>
+<h3 class="subsubhead">Defusion</h3>
+<p>A mine must be defused to be removed from the map. To defuse a mine, a soldier must be adjacent to the mine. It must take 12 <code>(GameConstants.MINE_DEFUSE_DELAY)</code> turns to defuse the mine, during which it cannot perform other actions and cannot auto-attack. If the soldier is killed during this time, the mine is not defused. Soldiers can only defuse one mine at a time, and two soldiers trying to defuse the same mine won't defuse it any faster. Once the defusion upgrade is researched, the time it takes to defuse the mine is reduced to 5 <code>(GameConstants.MINE_DEFUSE_DEFUSION_DELAY)</code>, and the soldier can defuse any mine within its sensor range.</p>
+<p>How defusion actually works is that soldiers target a square to defuse. They do not have to know there is a mine there to defuse. After the defusion time, any mine in that location will be removed, even if they aren't able to sense it, and even if the mine was not there when the soldier started defusing. You can accidentally defuse your own mines. If you defuse any mine, your opponent will be able to sense that there is no longer any mine there.</p>
+<h3 class="subsubhead">Neutral Mines</h3>
+<p>The map often starts off with lots of neutral mines. These belong to the neutral team. These are just like mines planted by either team in terms of damaging robots that move across. They can be defused just like any other mine. Both teams start off knowing the locations of all neutral mines on the map, and do not need to enter the square to be able to sense them.</p>
+<p>Note that you can sense exactly where the neutral mines on the map are. This means when the enemy defuses neutral mines, you can tell, although this is fairly expensive in bytecodes.</p>
+<h2 class="subhead"><a name="upgrades"></a>Upgrades</h2>
+<p>Upgrades are researchable from your HQ. The following upgrades are available:</p>
+<ol>
+    <li><b>Pickaxe</b>: When a soldier mines, in addition to mining the square it is on, it also mines each of the four orthogonally adjacent squares.</li>
+    <li><b>Defusion</b>: Soldiers can defuse mines not only in adjacent squares, but in all squares in its personal sight radius. They also defuse mines significantly faster. They still must defuse one mine at a time.</li>
+    <li><b>Vision</b>: Increases the personal sensor radius on all robots from 14 to 33 units squared.</li>
+    <li><b>Fusion</b>: The team's power decay rate is adjusted from 20% <code>RESOURCE_DECAY_RATE</code> to 1% <code>RESOURCE_DECAY_RATE_FUSION</code>.</li>
+    <li><b>Nuke</b>: You immediately win.</li>
+</ol>
+<p>An upgrade must be fully researched before its abilities kick in. The HQ can put one point into an upgrade per turn (unless it is spawning soldiers), and the upgrade is considered completed when <code>numRounds</code> of points have been put into it.</p>
+<h2 class="subhead"><a name="victory-conditions"></a>Victory Conditions</h2>
+<p>A team wins by destroying the enemy's HQ, or by researching the nuke upgrade. We expect most games to end by HQ destruction. The nuke upgrade is intended to be used in extreme stalemate situations. After exactly 2000 rounds <code>(GameConstants.ROUND_LIMIT)</code>, the HQ starts taking damage at a rate of 1 <code>(GameConstants.TIME_LIMIT_DAMAGE)</code> energon per turn. This means the game must be over after 2500 rounds. If both teams lose their HQs from end of round damage on the same turn, then the following tiebreakers are applied in order to determine the winner:</p>
+<ul>
+    <li>Total # Encampments</li>
+    <li>Total # Energon across all robots</li>
+    <li>Total # Mines</li>
+    <li>Total Team Power</li>
+    <li>Lowest ID</li>
+</ul>
+<h2 class="subhead"><a name="robot-actions"></a>Robot Actions</h2>
+<p>Robots are equipped with a variety of high tech equipments and can perform the following actions during their turn.</p>
+<h3 class="subsubhead">Sensors</h3>
+<p>All robots are equipped with personal sensors. These sensors have a sensor range of 14 units squared, which is the same for all robots, and which can be upgraded with the VISION upgrade to 33 units squared. Other than hidden enemy mines, robots can sense everything in their personal sensor range, as well the personal sensor range of every other robot on its team.</p>
+<ul>
+    <li>The info on all allied robots can be sensed.</li>
+    <li>The info on visible enemy robots can be sensed.</li>
+    <li>The positions of detected enemy mines can be sensed. Mines are detected after an allied unit has stepped on it. These mines do not have to be in sensing range after they have been detected.</li>
+    <li>The positions of all neutral mines on the map are automatically known at game start, and can be accurately sensed at any time, even if they are out of the range of all of the sensor range of all allied robots.</li>
+    <li>The positions of allied mines can be accurately sensed, even if they are out of the range of all of the sensor range of all allied robots.</li>
+    <li>The locations of the both HQs can be sensed.</li>
+    <li>Your own team's upgrade progress can be sensed, but only by the HQ.</li>
+    <li>The HQ can sense whether the enemy's nuke progress has reached the halfway mark.</li>
+</ul>
+<h3 class="subsubhead">Messaging</h3>
+<p>In Battlecode, robots do not have the ability to access each other's internal memory. Each robot runs on its own thread and cannot access the other robot objects directly. How different robots on a team communicate is by messaging.</p>
+<p>This year, there is a global message board accessible to all robots that supports read/write operations. It works as follows:</p>
+<ul>
+    <li>The message board is essentially an array of <code>int</code>s. Each position in this array is called a &quot;channel.&quot; The channels are numbered from 0 to 65535 <code>(GameConstants.BROADCAST_MAX_CHANNELS)</code>, inclusive. Robots can &quot;broadcast&quot; to these channels, which is essentially just storing an <code>int</code> in a specified position of this array.</li>
+    <li>There is only <em>one</em> global message board and all robots from both teams access the same one.</li>
+    <li>During each robot's turn, it may write to any channel via <code>rc.broadcast(channel)</code> and read what has last been broadcasted on any channel via<code> rc.readBroadcast(channel)</code>.</li>
+    <li>There is a power cost associated with both reading<br />
+    <code>(GameConstants.BROADCAST_SEND_COST)</code> and writing <code>(GameConstants.BROADCAST_READ_COST)</code> to the board. A robot can read and write to the message board as many times as it wants in one turn, as long as the team can pay this power cost.</li>
+    <li>Once a message is written to the board, it persists until it is overwritten, or until the end of the game.</li>
+    <li>At the beginning of a game, all channels are initialized to 0.</li>
+</ul>
+<p>This message board is globally accessible by <em>any</em> robot and is used for communicating whatever the AIs wish to communicate. It can be used to coordinate your army, distribute computation, or call for reinforcements. Since both teams use the same message board, robots' broadcasts may interfere with each other, either by accident or on purpose. Because of this, it is not guaranteed that a broadcast will be able to reach other robots, as the data in a channel may be overwritten before the intended recipient robot gets a turn to read the channel.</p>
+<h3 class="subsubhead">Autoattack</h3>
+<p>SOLDIERs, SHIELDs, and MEDBAYs autoattack. This attacking cannot be disabled by the player; it will happen at the end of the turn if a robot is still alive and not in the middle of performing an action (mining, defusing, capturing).</p>
+<p>SOLDIERs will deal 6 <code>(SOLDIER.attackPower)</code> damage to enemies per turn automatically, if it ends the turn adjacent to any enemies. This damage is split evenly between all the adjacent enemies, so if it is adjacent to four enemies, it will deal 1.5 damage to each. Any enemies whose energon gets reduced to 0 or below after this are immediately removed from the game. Overkill damage is wasted, so if a soldier is adjacent to two enemy robots with 1 energon and 40 energon left, one robot will die and the other will be reduced to 37 energon.</p>
+<p>SHIELDs automatically add 5 <code>(SHIELD.attackPower)</code> shields to adjacent allies and itself every turn. This is 5 per robot, so it can potentially shield multiple robots for a total of 45 shields added. Shield decay still happens while a robot is next to a SHIELD, so a SHIELD will add 5 shields to itself and then lose 1 <code>(GameConstants.SHIELD_DECAY_RATE)</code> shield to decay every turn, ending with a net gain of 4. SHIELDs can shield each other, and multiple SHIELDs can add shields to the same robot on the same round.</p>
+<p>MEDBAYs automatically replenish 2 <code>(MEDBAY.attackPower)</code> energon to adjacent allies and itself every turn. This is 2 energon per robot, so it can potentially heal multiple robots for a total of 18 energon healed. This healing does not affect the HQ. Energon cannot exceed maximum energon. MEDBAYs can heal each other, and multiple MEDBAYs can heal the same robot on the same round.</p>
+<h3 class="subsubhead">Movement</h3>
+<p>Only the SOLDIER has the ability to move. Moving has no power cost.</p>
+<p>Every turn, SOLDIERs may move to any unoccupied adjacent square, provided they are not in delay from performing any other action (mining, defusing, capturing). Soldiers can auto-attack on the same turn they move. They cannot mine, defuse, or capture on the same turn they move.</p>
+<p>SOLDIERs can move diagonally at the same speed as they can move orthogonally.</p>
+<h3 class="subsubhead">Spawning</h3>
+<p>The HQ has the ability to continuously spawn SOLDIERs. The action of spawning soldiers does not cost power by itself, but the spawned soldiers will start to consume power via upkeep. After the HQ spawns a SOLDIER, the HQ is unable to do any other actions (spawning or researching) for a brief time, determined by how many SUPPLIERs the team currently has alive.</p>
+<p>SOLDIERs can be spawned in any adjacent square that does not already have a robot on it. In the beginning, the HQ may spawn one SOLDIER per 10 <code>(GameConstants.HQ_SPAWN_DELAY)</code> rounds. This spawn rate is reduced by SUPPLIERS according to the formula <code>a=r(GameConstants.HQ_SPAWN_DELAY*GameConstants.HQ_SPAWN_DELAY_CONSTANT/(GameConstants.HQ_SPAWN_DELAY_CONSTANT+b))</code>, where a is the number of turns it takes to spawn one unit, b is the number of suppliers you have alive, and r() rounds a number to the nearest positive integer. Units that are spawned are immediately placed on the field and may perform actions like any other robot. The HQ cannot spawn or research while it is in spawning cool-down.</p>
+<h3 class="subsubhead">Suicide</h3>
+<p>Calling <code>suicide()</code> immediately kills the robot and removes it from the game. It will no longer consume upkeep in future rounds. If an encampment suicides, then the square is freed up for a potentially different encampment to be created there. If a robot suicides, no power is refunded to the team.</p>
+<h3 class="subsubhead">Team Memory</h3>
+<p>Official matches will usually be sets of multiple games. Each team can save a small amount of information <code>(GameConstants.TEAM_MEMORY_LENGTH longs)</code> for the next game using the function <code>setTeamMemory()</code>. This information may be retrieved using <code>getTeamMemory()</code>. If there was no previous game in the match, or no information was saved, then the memory will be filled with zeros.</p>
+<h3 class="subsubhead">Control Bits, Indicator Strings, and Breakpoints</h3>
+<p>There are several ways that the user can interact with robots. First, any robot can use <code>setIndicatorString(int,String)</code> to set a <code>String</code> that is visible to the user when selecting the robot. Second, the user can manually set a <code>long</code> for each robot, which the robot can query using <code>getControlBits()</code>. Finally, a robot can call <code>breakpoint()</code>, which flags the game engine to pause computation at the end of the round. These methods are for debug purposes only. During tournaments and scrimmages, the user will not be able to interact with the robots. For more information on these debugging interfaces, check out Debugging below.</p>
+<h3 class="subsubhead">Ending Turn</h3>
+<p>Calling <code>yield()</code> and <code>suicide()</code> instantly ends the turn of a robot. Otherwise a turn ends naturally when the bytecode limit is hit. Every turn a robot gets 10000 bytecodes to run code. At the end of a robot's turn, if the robot yielded, unused bytecodes will return power back into the team's global power pool.</p>
+<h2 class="subhead"><a name="maps"></a>Maps</h2>
+<p>Battlecode maps consist of a grid of squares, each with a pair of integer coordinates. Locations on the map are represented as instances of <code>MapLocation</code> objects.</p>
+<p>Maps are always rectangular. All of the squares in the map have the same terrain type, while squares out of bounds will have a different terrain type. Map coordinates are represented similarly to the pixels on a computer screen: x-coordinates increase moving to the right (East), and y-coordinates increase moving down (South). The most NORTHWEST square of the map is guaranteed to be coordinate (0,0), and the most SOUTHEAST square will be (WIDTH-1, HEIGHT-1).</p>
+<p>Maps specify the spawn points of both teams, as well as where all the encampment squares are. They also specify the locations of all the neutral mines.</p>
+<h3 class="subsubhead">Map Files</h3>
+<p>Maps are specified by XML files, and can be found in the maps folder of the release archive. The schema for the files should be fairly intuitive, so if you'd like to add your own maps you can use the provided maps as a basis. Each map has an associated random number seed, which the RNG uses to generate random numbers in games played on that map.</p>
+<h3 class="subsubhead">Map Constraints</h3>
+<p>Official maps used in scrimmages and tournaments must all satisfy the following conditions.</p>
+<ul>
+    <li>Maps are completely symmetric either by reflection or 180 degree rotation.</li>
+    <li>The width and height of the map are guaranteed to be between 20 and 70, inclusive.</li>
+    <li>The map cannot have neutral mines on the 4 squares orthogonally adjacent to either HQ.</li>
+    <li>There will be a minimum of 5 encampment squares on the map.</li>
+    <li>It will be possible for a soldier to get adjacent to the enemy HQ by turn 200, even if you only make one soldier and research / capture nothing, and the opposing team does nothing.</li>
+    <li>The distance between the spawn points will be at least 10 units (Euclidean distance).</li>
+</ul>
+<h2 class="subhead"><a name="writing-a-player"></a>Writing a Player</h2>
+<h3 class="subsubhead">Introduction</h3>
+<p>Your player program must reside in a Java package named <code>teamXXX</code>, where XXX is your three-digit team number, with leading zeros included. You may have whatever sub-packages you like. You must define <code>teamXXX.RobotPlayer</code>, which must have a public static run method that takes one argument of type <code>battlecode.common.RobotController</code>. Whenever a new robot is created, the game calls the run method with the robots RobotController as its argument. If this method ever finishes, either because it returned or because of an uncaught exception, the robot dies and is removed from the game. You are encouraged to wrap your code in loops and exception handlers so that this does not happen.</p>
+<h3 class="subsubhead">RobotController</h3>
+<p>The RobotController argument to the RobotPlayer constructor is very important&mdash;this is how you will control your robot. RobotController has methods for sensing (e.g. <code>senseRobotInfo(Robot)</code>) and performing actions (e.g., <code>move()</code>). If you're not sure how to get your robot to do something, the Javadocs for RobotController are a good place to start.</p>
+<h3 class="subsubhead">Example: examplefuncsplayer</h3>
+<pre><code>import battlecode.common.Direction;
+import battlecode.common.GameConstants;
+import battlecode.common.RobotController;
+import battlecode.common.RobotType;
+
+/** The example funcs player is a player meant to demonstrate basic usage of the most common commands.
+ * Robots will move around randomly, occasionally mining and writing useless messages.
+ * The HQ will spawn soldiers continuously.
+ */
+public class RobotPlayer {
+  public static void run(RobotController rc) {
+    while (true) {
+      try {
+        if (rc.getType() == RobotType.HQ) {
+          if (rc.isActive()) {
+            // Spawn a soldier
+            Direction dir = rc.getLocation().directionTo(rc.senseEnemyHQLocation());
+            if (rc.canMove(dir))
+              rc.spawn(dir);
+          }
+        } else if (rc.getType() == RobotType.SOLDIER) {
+          if (rc.isActive()) {
+            if (Math.random()&lt;0.005) {
+              // Lay a mine
+              if (rc.senseMine(rc.getLocation())==null)
+                rc.layMine();
+            } else {
+              // Choose a random direction, and move that way if possible
+              Direction dir = Direction.values()[(int)(Math.random()*8)];
+              if (rc.canMove(dir)) {
+                rc.move(dir);
+                rc.setIndicatorString(0, &quot;Last direction moved: &quot;+dir.toString());
+              }
+            }
+          }
+          if (Math.random()&lt;0.01 &amp;&amp; rc.getTeamPower()&gt;5) {
+            // Write the number 5 to a position on the message board corresponding to the robot's ID
+	    rc.broadcast(rc.getRobot().getID()%GameConstants.BROADCAST_MAX_CHANNELS, 5);
+          }
+        }
+        // End turn
+        rc.yield();
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+    }
+  }
+}</code></pre>
+<p>Notice the <code>while(true)</code> loop, which prevents the run method from returning. While the robot is alive, it will be continually cycling through this loop. The try/catch block inside the loop prevents the robot from throwing an uncaught exception and dying.</p>
+<h2 class="subhead"><a name="execution-order"></a>Execution Order</h2>
+<p>The game is comprised of a number of rounds. During each round, all robots get a turn in order of their IDs. Robots that were created earlier have lower IDs. Newly spawned robots will have a turn on the same round they were created.</p>
+<p>The following is a detailed list of a robot's execution order within a single turn. If it dies halfway through, the remainder of the list does not get executed. In particular, note that changes to a robot's state do not happen while player code is being executed. All actions instead get sent to an action queue, and they are executed after the player code is run. For example, if a SOLDIER calls <code>move()</code> and then <code>getLocation()</code>, it will not reflect the location of the robot yet.</p>
+<ol>
+    <li>Robot's upkeep cost, is subtracted from the power pool, or if there is insufficient power in the pool, '<code>GameConstants.UNIT_ENERGON_UPKEEP</code>' is paid in energon (if robot dies, it does not get a turn, and no power is refunded).</li>
+    <li>Robot executes up to <code>GameConstants.BYTECODE_LIMIT</code> of player code. Power costs for action calls in the player code are checked based on the available power at this point.</li>
+    <li>Power is refunded based on remaining bytecodes by a factor of <code>GameConstants.POWER_COST_PER_BYTECODE</code>, even if it paid its upkeep with energon.</li>
+    <li>Channels are updated with new broadcasts.</li>
+    <li>Actions are performed
+    <ol type="A">
+        <li>If the robot is on the last turn of mining, the mines are placed on the map (SOLIDER Only).</li>
+        <li>If the robot is on the last turn of defusing, the mines are removed from the map (SOLIDER Only).</li>
+        <li>If the robot is on the last turn of capturing, then the encampment is created, and the robot is destroyed (SOLIDER Only).</li>
+        <li>The robot moves (SOLIDER Only).</li>
+        <li>Targeted attacks happen (ARTILLERY Only).</li>
+        <li>Research is updated OR a unit is spawned (HQ Only).</li>
+    </ol>
+    </li>
+    <li>Mine damage is applied (SOLDIER Only).</li>
+    <li>Automatic attacks are performed
+    <ol type="A">
+        <li>Robot auto-attacks adjacent enemies (SOLIDER Only).</li>
+        <li>Robot heals itself and adjacent allies (MEDBAY Only).</li>
+        <li>Robot adds shields to itself and adjacent allies (SHIELDS Only).</li>
+    </ol>
+    </li>
+    <li>Shield decay is applied.</li>
+</ol>
+<h2 class="subhead"><a name="timing"></a>Timing</h2>
+<p>Each robot is allowed a certain amount of computation each round. Computation is measured in terms of Java bytecodes, the atomic instructions of compiled Java code. Individual bytecodes are simple instructions such as &quot;subtract&quot; or &quot;get field&quot;, and a single line of code generally contains several bytecodes. (For details see <a href="http://en.wikipedia.org/wiki/Java_bytecode">http://en.wikipedia.org/wiki/Java_bytecode</a>) Each round, every player runs a number of bytecodes determined by <code>GameConstants.BYTECODE_LIMIT</code>. When a robot hits the bytecode limit, its computation is paused while other robots get to do their computation for the same round or the next round. On the next round, the robot's computation is resumed exactly where it left off. Thus, to the robot's code, the round change is invisible. Nothing will jump out and shout at you when a round ends.</p>
+<p>Because the round can change at the end of any bytecode, unexpected things can happen. For instance, consider the following example:</p>
+<pre><code>Robot[] nearbyRobots = myRC.senseNearbyGameObjects(Robot.class);
+MapLocation loc = myRC.senseRobotInfo(nearbyRobots[0]);</code></pre>
+<p>In the first line, the robot gets a list of all other robots in its sensor range. In the second line, the robot senses the RobotInfo of the first robot in the list. However, what happens if the round changes between the first and second line? A robot that was in sensor range when line 1 was executed might be out of sensor range when line 2 is executed, resulting in an exception. Because of this, your code should be written defensively. Think of this as a &quot;real-world&quot; robot, where things can fail at any time, and you have to be prepared to handle it.</p>
+<p>However, there are ways of dealing with this, as we'll see in the next section.</p>
+<h3 class="subsubhead">Yielding</h3>
+<p>One way to deal with timing complexities is to use <code>yield()</code> judiciously. Calling <code>RobotController.yield()</code> ends the robot's computation for the current round. This has two advantages.</p>
+<p>First, robots consume power based on how many bytecodes they use every turn. A player that uses fewer bytecodes in a turn will be able to support more robots.</p>
+<p>Second, after a call to <code>RobotController.yield()</code>, subsequent code is executed at the beginning of a new round. Then, you have the full amount of bytecodes for your robot to do computations before the round changes. For instance, let's modify the example above to be:</p>
+<pre><code>myRC.yield();
+Robot[] nearbyRobots = myRC.senseNearbyGameObjects(Robot.class);
+MapLocation loc = myRC.senseRobotInfo(nearbyRobots[0]);</code></pre>
+<p>Since yield is called in line 1, line 2 will be executed at the beginning of a new round. Since <code>senseNearbyGameObjects()</code> does not take very many bytecodes, it is pretty much guaranteed that there won't be a round change between lines 2 and 3.</p>
+<p>A common paradigm is to have a main loop, with a <code>yield()</code> at the bottom of the loop. Thus, the top of the loop is always executed at the beginning of the round. If all the robot's computation for one iteration of the loop can fit in one round, then there should be minimal problems with unexpected round changes. Note that team000 above does this.</p>
+<h3 class="subsubhead">Monitoring</h3>
+<p>The Clock class provides a way to identify the current round (<code>Clock.getRoundNum()</code>), and how many bytecodes have been executed during the current round (<code>Clock.getBytecodeNum()</code>).</p>
+<h3 class="subsubhead">GameActionExceptions</h3>
+<p><code>GameActionExceptions</code> are thrown when an ability cannot be performed. It is often the result of uncertainty about the game world, or an unexpected round change in your code. Thus, you must write your player defensively and handle <code>GameActionExceptions</code> judiciously. Each <code>GameActionException</code> has a <code>GameActionExceptionType</code>, which tells roughly what went wrong. You should also be prepared for any ability to fail and make sure that this has as little effect as possible on the control flow of your program.</p>
+<p>Exceptions cause a bytecode penalty of <code>GameConstants.EXCEPTION_BYTECODE_PENALTY</code>.</p>
+<h2 class="subhead"><a name="mechanics"></a>Mechanics</h2>
+<p>This section deals with some of the mechanics of how your players are run in the game engine, including bytecode-counting, library restrictions, etc.</p>
+<h3 class="subsubhead">Java Language Usage</h3>
+<p>Players may use classes from any of the packages listed in <code>AllowedPackages.txt</code>, except for classes listed in <code>DisallowedPackages.txt</code>.</p>
+<p>Furthermore, the following restrictions apply:</p>
+<p><code>Object.wait</code>, <code>Object.notify</code>, <code>Object.notifyAll</code>, <code>Class.forName</code>, and <code>String.intern</code> are not allowed. <code>java.lang.System</code> only supports out, <code>arraycopy</code>, and <code>getProperty</code>. Furthermore, <code>getProperty</code> can only be used to get properties with names beginning with &quot;bc.testing.&quot; <code>java.io.PrintStream</code> may not be used to open files. Scala functions such as <code>scala.Console.readByte()</code> that attempt to read from standard input will always throw an <code>EOFException</code>.</p>
+<p>Note that violating any of the above restrictions will cause the robots to self-destruct when run, even if the source files compile without problems.</p>
+<h3 class="subsubhead">Bytecode Costs</h3>
+<p>Classes in <code>java.util</code>, <code>java.math</code>, and scala and their subpackages are bytecode counted as if they were your own code. The following functions in java.lang are also bytecode counted as if they were your own code:</p>
+<pre><code>Math.random
+StrictMath.random
+String.matches
+String.replaceAll
+String.replaceFirst
+String.split</code></pre>
+<p>The function <code>System.arraycopy</code> costs one bytecode for each element copied. All other functions have a fixed bytecode cost. These costs are listed in the MethodCosts.txt file. Functions not listed in <code>MethodCosts.txt</code> are free. The bytecode costs of <code>battlecode.common</code> functions are also listed in the javadoc.</p>
+<h3 class="subsubhead">Memory Usage</h3>
+<p>Robots must keep their memory usage reasonable. If a robot uses more than 8 Mb of heap space during a tournament or scrimmage match, the robot may be killed.</p>
+<h3 class="subsubhead">Exceptions</h3>
+<p>Throwing exceptions of any kind incurs a bytecode penalty given by <code>GameConstants.EXCEPTION_BYTECODE_PENALTY</code>, so unnecessary throwing of exceptions should be avoided.</p>
+<h3 class="subsubhead">Virtual Machine Errors</h3>
+<p>Your player cannot catch virtual machine errors such as <code>StackOverflowError</code> and <code>OutOfMemoryError</code>. If your robot throws one of these exceptions, it will die.</p>
+<h3 class="subsubhead">Java Version</h3>
+<p>Our scrimmage and tournament servers will be running Java 6 and Scala 2.9. The Battlecode software should run on Java 7, but please be aware that our compile server will not recognize Java 7 specific language features.</p>
+<h2 class="subhead"><a name="debugging"></a>Debugging</h2>
+<p>This section describes some of the features of the game engine intended to make debugging somewhat less painful. Debug mode reveals valuable information about robots at development time but will be turned off for scrimmages and real tournaments.</p>
+<h3 class="subsubhead">System.out</h3>
+<p>Any output that your robots print to <code>System.out</code> is directed to the output stream of the Battlecode engine, prefixed with information about the robot.</p>
+<h3 class="subsubhead">Setting Indicator Strings</h3>
+<p>You'll find that your primary source of debugging is setting one of 3 indicator strings that are viewable in the client. Unlike <code>System.out</code> which is not synchronized to match execution (as the engine precomputes the game faster than the client views it), Indicator strings are synchronized to the round number and can be used for debugging complex robot behaviors.</p>
+<p>Use <code>setIndicatorString(int,String)</code> to change a robot's indicator string. They are viewable in the top right corner of the client when the robot is selected. Indicator strings maintain value until they are changed.</p>
+<h3 class="subsubhead">Debug Methods</h3>
+<p>The game engine has a feature that allows you to separate out debugging code that is unimportant to your player's performance in the tournament. Methods that have names beginning with debug_ and that have a void return type are given special status. By default, these methods are skipped during execution of the player. When the System property <code>debugMethodsEnabled</code> is set to true, however, the methods are executed normally except that they do not count against your robot's bytecode limit. Code that prepares the arguments to such a method may consume bytecodes, but the body of the method and any methods that it invokes are not counted.</p>
+<h3 class="subsubhead">System Properties</h3>
+<p>Your robot can read system properties whose names begin with &quot;bc.testing.&quot; You can set a property by adding a line to bc.conf like this:</p>
+<pre><code>bc.testing.team-a-strategy=experimental</code></pre>
+<p>You can check the value of the property like this:</p>
+<pre><code>String strategy = System.getProperty(&quot;bc.testing.team-a-strategy&quot;);</code></pre>
+<h3 class="subsubhead">Breakpoints</h3>
+<p>Breakpoints allow you to pause the game engine's calculations. If breakpoints are enabled (see the software page), and a robot calls <code>RobotController.breakpoint()</code>, the game engine will stop computing at the end of the round. This gives you a chance to see exactly what's going on in the game when your robot hits a certain point in its code. You can resume the game engine's computation in the client, by hitting the &quot;resume&quot; button. If the match is being dumped straight to a file (i.e., there is no client to resume the game), breakpoints are ignored.</p>
+<p>Note that when a robot calls <code>breakpoint()</code>, computation will be stopped at the end of the round, not immediately when <code>breakpoint()</code> is called. Depending on the circumstances, you might want to use <code>breakpoint()</code>; <code>yield()</code>; instead.</p>
+<h2 class="subhead"><a name="disclaimers"></a>Disclaimers</h2>
+<p>We have done our best to test and balance the properties of the Battlecode world. Inevitably, however, we will need to make adjustments in the interest of having a fair competition that allows a variety of creative strategies. We will endeavor to keep these changes to a minimum, and release them as early as possible. All changes will be carefully documented in the Changelog.</p>
+<p>Despite our best efforts, there may be bugs or exploits that allow players to operate outside the spirit of the competition. Using such exploits for the tournament or scrimmage will result in immediate disqualification, at the discretion of the directors. Such exploits might include, but are not limited to, robot communication without messages, bypassing the bytecode limit, or terminating the game engine. If you are not sure what qualifies as &quot;in the spirit of the competition&quot;, ask the devs before submitting your code.</p>
+<h2 class="subhead"><a name="changelog"></a>Changelog</h2>
+<ul>
+    <li><strong>1.0.0</strong> (1/7/2013) &ndash; Initial specs released.</li>
+    <li><strong>1.0.1</strong> (1/7/2013) &ndash; Bug hotfix. Example players no longer throw exceptions, encampment capture cost is made obvious in the spec. Misc. spec typos fixed.</li>
+    <li><strong>1.1.0</strong> (1/8/2013) &ndash; Note Backwards Incompatible <strong>API CHANGES.</strong>
+    <ul>
+        <li>Most RobotLevel stuff removed.</li>
+        <li>Capture cost calculation made robust.</li>
+        <li>Sensing of mines, robots, encampments made easier, API refactored and intentionally broken to make this obvious.</li>
+        <li>Map max size reduced to 70, and constraints made tighter (200 max rush distance). Lots of new maps added.</li>
+        <li>Nuke sensing rebalanced, only 50% detectable.</li>
+        <li>Spec document mostly rewritten to include detailed information regarding mines, broadcasting, etc.</li>
+    </ul>
+    </li>
+    <li><strong>1.1.1</strong> (1/8/2013) &ndash; Fixing typos.</li>
+    <li><strong>1.1.2</strong> (1/9/2013) &ndash; Fixing bug in mine sensing. Tiebreaker conditions fixed. Specs updated to describe autoattacks better.</li>
+    <li><strong>1.1.3</strong> (1/9/2013) &ndash; Fixed neutral mine detection.</li>
+    <li><strong>1.1.4</strong> (1/10/2013) &ndash; Added runmatch to automate replays.</li>
+    <li><strong>1.1.5</strong> (1/11/2013) &ndash; Broadcast read cost reduced. Correct ranges displayed. Shields improved. Fixed specs. Increased number of channels.</li>
+    <li><strong>1.2.0</strong> (1/17/2013) &ndash; Post-sprint release. Updates to the sprites. Added new maps. Additional Client options.</li>
+    <li><strong>1.3.0</strong> (1/25/2013) &ndash; Final Release Candidate. Added new maps. Additional client fixes. Balance changes:
+    <ul>
+        <li>Artillery base damage increased to 60 (from 40).</li>
+        <li>Artillery splash ratio decreased to 0.25 (splash damage dropped from 20 to 15).</li>
+        <li>Shield charge rate increased to 10 / turn.</li>
+        <li>Shield decay increased to 1 / turn.</li>
+        <li>Shields mine damage absorption increased to 90% (from 75%).</li>
+        <li>Broadcast send power cost reduced to 0.03.</li>
+        <li>Robot IDs more randomized.</li>
+        <li>Hats DLC expansion pack added&mdash;now accepting orders.</li>
+    </ul>
+    </li>
+    <li><strong>1.3.1</strong> (1/25/2013) &ndash; Bug Hotfix.
+    <ul>
+        <li>Hotfix for HUD crashes on case-sensitive filesystems.</li>
+        <li>Nuke research time increased to 404 rounds (from 400).</li>
+    </ul>
+    </li>
+</ul>
+<h2 class="subhead"><a name="appendices"></a>Appendices</h2>
+<h3 class="subsubhead">Appendix A: Javadocs and Game Constants</h3>
+<p><a href="http://ocw.mit.edu/ans7870/6/6.370/iap13/">Javadocs</a> are provided, and they are also included in the software distribution. The javadocs include the values of the game constants and robot attributes.</p>
+<h3 class="subsubhead">Appendix B: Energon Health Warning</h3>
+<p>Energon intake is not for everyone. Please consult a physician before use. 6.370 Battlecode Corporation is not responsible in the event of injury due to energon use. Energon's side-effects include loss of limb, death, unbearable pain, tendencies to procrastinate and an unnatural senseless rage. Handle with care. Energon consumption has not been approved by any health agency and you USE IT AT YOUR OWN RISK. For this reason, please be careful when scrimmaging. Energon is the same thing as health.</p>

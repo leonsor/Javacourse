@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section name="Workbench">
+	<list key="org.eclipse.ui.internal.wizards.datatransfer.SmartImportRootWizardPage.knownSources">
+		<item value="D:\Users\Leon\Skydrive\Programming\Battlecode2013"/>
+		<item value="D:\Users\Leon\Skydrive\Development\6-370-january-iap-2013\contents\specs-and-software\battlecode-2013-software"/>
+		<item value="D:\Users\Leon\Skydrive\Development\6-370-january-iap-2013"/>
+		<item value="P:\Development\Battlecode2013"/>
+	</list>
+	<section name="NewWizardAction">
+		<item value="org.eclipse.jdt.ui.wizards.JavaProjectWizard" key="NewWizardSelectionPage.STORE_SELECTED_ID"/>
+		<list key="NewWizardSelectionPage.STORE_EXPANDED_CATEGORIES_ID">
+			<item value="org.eclipse.jdt.ui.java"/>
+		</list>
+	</section>
+	<section name="ChooseWorkspaceDialogSettings">
+		<item value="177" key="DIALOG_X_ORIGIN"/>
+		<item value="336" key="DIALOG_Y_ORIGIN"/>
+	</section>
+</section>
