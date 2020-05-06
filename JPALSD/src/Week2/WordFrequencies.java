@@ -91,10 +91,10 @@ public class WordFrequencies {
 	public void tester() {
 		findUnique();
 		System.out.println("# unique words: " + myWords.size());
-		for(int i = 0; i < myWords.size(); i++) {
+		/*for(int i = 0; i < myWords.size(); i++) {
 			System.out.println("Word: " + myWords.get(i) + " appeared " +
 					myFreqs.get(i) + " times");
-		}
+		}*/
 		int index = this.findIndexOfMax();
 		System.out.println("The word that occurs most often = " + myWords.get(index) + 
 				" ,and it occured " + myFreqs.get(index) + " times");
