@@ -28,7 +28,7 @@ public class WordFrequenciesMap {
 		}
 		for(String w : map.keySet()) {
 			int occurrences = map.get(w);
-			if(occurrences > 300) {
+			if(occurrences > 200) {
 				System.out.println(occurrences + "\t" + w);
 			}
 		}
