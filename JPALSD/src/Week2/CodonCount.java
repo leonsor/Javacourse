@@ -90,7 +90,7 @@ public class CodonCount {
 			String commonCodon = this.getMostCommonCodon();
 			System.out.println("and most common codon = " + commonCodon + " with count " + 
 					dnaCount.get(commonCodon));
-			printCodonCounts(1,5);
+			printCodonCounts(1,7);
 		}	
 	}
 	/**

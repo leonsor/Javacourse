@@ -31,7 +31,7 @@ public class WordsinFiles {
 		FileResource fr = new FileResource(f);
 		ArrayList<String> newWord = new ArrayList<String>();
 		for(String word : fr.words()) {
-			System.out.println(word); //TODO delete after testing
+			//System.out.println(word); //TODO delete after testing
 			if(wordMap.containsKey(word)) {
 				ArrayList<String> currentArray = wordMap.get(word);
 				currentArray.add(fileName);
@@ -43,7 +43,7 @@ public class WordsinFiles {
 				newWord.add(fileName);
 				wordMap.put(word, newWord);
 			}
-			System.out.println(wordMap + "\n"); //TODO delete after testing
+			//System.out.println(wordMap + "\n"); //TODO delete after testing
 		}
 	}
 	
@@ -60,6 +60,11 @@ public class WordsinFiles {
 		}
 	}
 	
+	/**
+	 * This method returns the maximum number of files 
+	 * any word appears in, considering all words from a group of files
+	 * @return
+	 */
 	private int maxNumber() {
 		int maxNumber = 0;
 		for(String A : wordMap.keySet()) {
@@ -71,17 +76,47 @@ public class WordsinFiles {
 		return maxNumber;
 	}
 	
+	/**
+	 * This method returns an ArrayList of words that appear in exactly number files.
+	 * @param number
+	 * @return
+	 */
+	private ArrayList<String> wordsinNumFiles(int number ) {
+		ArrayList<String> words = new ArrayList<String>();
+		for(String word : wordMap.keySet()) {
+			if(wordMap.get(word).size() == number) {
+				words.add(word);
+			}
+		}
+		System.out.println("Amount of words with number of occurences " +
+				number + " is " + words.size());
+		return words;
+	}
+	
+	/**
+	 * This method prints the names of the files this word appears in, one filename per line.
+	 * @param word
+	 */
+	private void printFilesin(String word) {
+		ArrayList<String> found = wordMap.get(word);
+		for(int i = 0; i < found.size(); i++) {
+			System.out.println(found.get(i));
+		}
+	}
+	
 	public void test() {
 		this.buildWordFileMap();
-		System.out.println("words in wordMap: " + wordMap.size());
+		//System.out.println("words in wordMap: " + wordMap.size());
 		for(String A : wordMap.keySet()) {
 			ArrayList<String> temp = wordMap.get(A);
-			System.out.println("Woord " + A + " lenght = " + temp.size());
+			//System.out.println("Woord " + A + " lenght = " + temp.size());
 			for(int i = 0; i < temp.size(); i++) {
-				System.out.println(temp.get(i));
+				//System.out.println(temp.get(i));
 			}
 		}
 		System.out.println("Max amount of file occurences: " + this.maxNumber());
+		//System.out.println(this.wordsinNumFiles(4));
+		this.printFilesin("red");
 	}
 	
 	/**
