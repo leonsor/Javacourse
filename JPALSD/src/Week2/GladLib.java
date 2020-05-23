@@ -19,7 +19,7 @@ public class GladLib {
 	private Random myRandom;
 	
 	private static String dataSourceURL = "http://dukelearntoprogram.com/course3/data";
-	private static String dataSourceDirectory = "D:\\Users\\Leon\\Skydrive\\Development\\JPALSD\\data\\Week2\\datalong";
+	private static String dataSourceDirectory = "C:\\Users\\Leon\\Onedrive\\Development\\JPALSD\\data\\week2\\datalong";
 	
 	public GladLib(){
 		initializeFromSource(dataSourceDirectory);
@@ -156,7 +156,7 @@ public class GladLib {
 	
 	public void makeStory(){
 	    System.out.println("\n");
-		String story = fromTemplate("D:\\Users\\Leon\\Skydrive\\Development\\JPALSD\\data\\Week2\\data\\madtemplate2.txt");
+		String story = fromTemplate("C:\\Users\\Leon\\Onedrive\\Development\\JPALSD\\data\\week2\\data\\madtemplate2.txt");
 		printOut(story, 60);
 		System.out.println("\n" + "Total number of words replaced: " + usedWords.size());
 		System.out.println("Total times already used words were replaced: " + counter);

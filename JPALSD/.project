@@ -3,6 +3,7 @@
 	<name>JPALSD</name>
 	<comment></comment>
 	<projects>
+		<project>Coursera</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
