@@ -23,7 +23,7 @@ public class LogAnalyzer {
 		for(String line : file.lines()) {
 			LogEntry record = WebLogParser.parseEntry(line);
 			records.add(record);
-			System.out.println("Total amount of records: " + records.size()); //TODO delete after testing
+			//System.out.println("Total amount of records: " + records.size()); //TODO delete after testing
 		}
 	}
 	
@@ -69,11 +69,42 @@ public class LogAnalyzer {
 	}
 	
 	/**
-	 * @param args
+	 * This method accesses the web logs in records and returns an ArrayList of Strings of 
+	 * unique IP addresses that had access on the given day. 
+	 * @param someday
+	 * @return ArrayList IP addresses
 	 */
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-
+	public ArrayList<String> uniqueIPVisitsOnDay(String someday) {
+		ArrayList<String> ipVisitsOnDay = new ArrayList<String>();
+		for(LogEntry log : records) {
+			String s = log.getAccessTime().toString();
+			//System.out.println(s); //TODO remove after testing
+			if(s.contains(someday)) {
+				//System.out.println("date found!"); //TODO replace with storage code
+				if(!ipVisitsOnDay.contains(log.getIpAddress())) {
+					ipVisitsOnDay.add(log.getIpAddress());
+				}
+			}
+		}
+		return ipVisitsOnDay; 
 	}
-
+	
+	/**
+	 * This method returns the number of unique IP addresses in records that have a status code
+	 *  in the range from low to high, inclusive
+	 * @param low
+	 * @param high
+	 * @return int for the amount of unique IP addresses within range
+	 */
+	public int countUniqueIPsInRange(int low, int high) {
+		ArrayList<String> ipAddresses = new ArrayList<String>();
+		for(LogEntry log : records) {
+			if(log.getStatusCode()>= low && log.getStatusCode()<= high) {
+				if(!ipAddresses.contains(log.getIpAddress())) {
+					ipAddresses.add(log.getIpAddress());
+				}
+			}
+		}
+		return ipAddresses.size();
+	}
 }

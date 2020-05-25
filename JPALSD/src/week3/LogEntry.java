@@ -6,8 +6,8 @@ import java.util.*;
 
 /**
  * @author Leon
- * - Testclass for the Lecture Wk 3
- * @version 1.0
+ * - Class for Programming exercise Wk 3
+ * @version 2.0
  */
 public class LogEntry {
 	private String ipAddress;
@@ -52,15 +52,4 @@ public class LogEntry {
 	public void tester() {
 		//TODO
 	}
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		//TODO - currently tested in Tester.java
-		/*LogEntry le = new LogEntry("1.2.3.4", new Date(), "example request", 
-				200, 500);
-		System.out.println(le);*/
-
-	}
-
 }
