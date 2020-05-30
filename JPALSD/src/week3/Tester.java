@@ -74,6 +74,12 @@ public class Tester {
 		}
 		String dayWithMostVisits = lA.dayWithMostIPVisits(ipPerDay);
 		System.out.println("Day with most IP visits " + dayWithMostVisits);
+		String day = "Mar 17";
+		ArrayList<String> ipMostVistOnDay = lA.iPsWithMostVisitsOnDay(ipPerDay, day);
+		System.out.println("ips most visited from on day :" + day);
+		for(String s : ipMostVistOnDay) {
+			System.out.println(s);
+		}
 	}
 	/**
 	 * @param args

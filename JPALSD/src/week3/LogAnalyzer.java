@@ -210,6 +210,28 @@ public class LogAnalyzer {
 	}
 	
 	/**
+	 * This method returns an ArrayList<String> of IP addresses that had the most accesses on the given day.
+	 * @param records
+	 * @param day
+	 * @return 
+	 */
+	public ArrayList<String> iPsWithMostVisitsOnDay(HashMap<String, ArrayList<String>> recordsPerDay, String day) {
+		ArrayList<String> ipMostVisit = new ArrayList<String>();
+		ArrayList<String> ipOnDay = recordsPerDay.get(day);
+		HashMap<String, Integer> numberPerIp = new HashMap<String, Integer>();
+		for(String s : ipOnDay) {
+			if(!numberPerIp.containsKey(s)) {
+				numberPerIp.put(s, 1);
+			}
+			else {
+				numberPerIp.put(s, numberPerIp.get(s)+1);
+			}
+		}
+		ipMostVisit = this.iPsMostVisits(numberPerIp);
+		return ipMostVisit; //TODO return type change
+	}
+	
+	/**
 	 * This helper method turns a date object into a date String in the format "Mmm dd" 
 	 * @param date
 	 * @return String date for menthod iPForDays
