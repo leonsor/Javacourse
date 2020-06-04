@@ -40,19 +40,71 @@ public class VigenereBreaker {
         }
         return key;
     }
+	
+	/**
+	 * The method should  read each line in fr, convert to lower case and 
+	 * than return the HashSet representing the words in a dictionary
+	 * @param fr
+	 * @return HashSet<String> which contains all words in the dictionary file
+	 */
+	public HashSet<String> readDictionary(FileResource fr) {
+		HashSet<String> dictionary = new HashSet<String>();
+		for(String word : fr.words()) {
+			word.toLowerCase();
+			dictionary.add(word);
+		}
+		return dictionary;
+	}
+	
+	/**
+	 * This method should split the message into words,  iterate over those words, 
+	 * and see how many of them are “real words”.  return the integer count
+	 * @param message
+	 * @param dictionary
+	 * @return how many valid words were found
+	 */
+	public int countWords(String message, HashSet<String> dictionary) {
+		int count = 0;
+		String[] wordList= message.split("\\W+");
+		for(String word : wordList) {
+			if(dictionary.contains(word.toLowerCase())) {
+				count++;
+			}
+		}
+		return count;
+	}
+	
+	public String breakForLanguage(String encrypted, HashSet<String> dictionary) {
+		int maxCount = 0;
+		HashMap<Integer,int[]> counting = new HashMap<Integer, int[]>();
+		for(int i = 1; i < 10; i++) {
+			int[] key = this.tryKeyLength(encrypted, i, 'e');//find key for each key length
+			VigenereCipher vC = new VigenereCipher(key);
+			String decrypted = vC.decrypt(encrypted);//decrypt message
+			int k = this.countWords(decrypted, dictionary);//count words in english
+			System.out.println(k + " words found for key lenght " + i);//TODO delete after testing
+			counting.put(i, key);//store i and count in HashMap
+			if(k > maxCount) {
+				maxCount = k;
+			}
+		}
+		VigenereCipher vC = new VigenereCipher(counting.get(maxCount));
+		return vC.decrypt(encrypted);
+	}
 
     /**
      * Method to break a message encrypted with a Vigenere Cypher
      * Known language, known key lenght
      */
-	public void breakVigenere () {
+	public String breakVigenere () {
        FileResource fr = new FileResource();
        String message = fr.asString();
-       int klength = 4;
+       int klength = 5;
        char mostCommon = 'e';
        int[] key = this.tryKeyLength(message, klength, mostCommon);
        VigenereCipher vC = new VigenereCipher(key);
        String decrypted = vC.decrypt(message);
        System.out.println(decrypted);
+       return decrypted;
     }
 }

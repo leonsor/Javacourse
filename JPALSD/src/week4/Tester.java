@@ -3,6 +3,8 @@
  */
 package week4;
 
+import java.util.HashSet;
+
 import edu.duke.FileResource;
 
 /**
@@ -39,6 +41,25 @@ public class Tester {
 		}
 	}
 	
+	public void testReadDictionary() {
+		VigenereBreaker vB = new VigenereBreaker();
+		FileResource fr = new FileResource();
+		HashSet<String> dictionary = vB.readDictionary(fr);
+		System.out.println("Amount of words in dictionary: " + dictionary.size());
+		/*for(String word : dictionary) {// possibility to print out all words
+			System.out.println(word);
+		}*/
+	}
+	
+	public void testCountWords () {
+		VigenereBreaker vB = new VigenereBreaker();
+		String message = vB.breakVigenere();
+		FileResource fr = new FileResource();
+		HashSet<String> dictionary = vB.readDictionary(fr);
+		int n = vB.countWords(message, dictionary);
+		System.out.println("Total amount of real words: " + n);
+	}
+	
 	/**
 	 * Test method for breakVigenere ()
 	 */
@@ -46,6 +67,16 @@ public class Tester {
 		VigenereBreaker vB = new VigenereBreaker();
 		vB.breakVigenere();
 	}
+	
+	public void testBreakForLanguage() {
+		VigenereBreaker vB = new VigenereBreaker();
+		String message = vB.breakVigenere();
+		FileResource fr = new FileResource();
+		HashSet<String> dictionary = vB.readDictionary(fr);
+		String decrypted = vB.breakForLanguage(message, dictionary);
+		System.out.println(decrypted);
+	}
+	
 	/**
 	 * @param args
 	 */
@@ -54,7 +85,10 @@ public class Tester {
 		//VigenereBreaker vB = new VigenereBreaker();
 		//te.testSliceString(); //test separately
 		//te.testTryKeyLength(); //test separately
-		te.testBreakVignere(); //last test for practical quiz week 4
+		//te.testBreakVignere(); //last test for practical quiz week 4
+		//te.testReadDictionary(); //Test for read dictionary
+		//te.testCountWords(); //Test for countWords. First select encrypted file, than select dictionary
+		te.testBreakForLanguage();//check with 10 keylengths
 	}
 
 }
