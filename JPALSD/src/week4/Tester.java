@@ -33,7 +33,7 @@ public class Tester {
 		VigenereBreaker vB = new VigenereBreaker();
 		FileResource fr = new FileResource();
 		String message = fr.asString();
-		int klength = 4;
+		int klength = 38;
 		char mostCommon = 'e';
 		int[] key = vB.tryKeyLength(message, klength, mostCommon);
 		for(int i = 0; i < key.length ; i++) {
@@ -60,12 +60,25 @@ public class Tester {
 		System.out.println("Total amount of real words: " + n);
 	}
 	
+	public void testMostCommonCharin() {
+		FileResource fr = new FileResource(); //read in dictionary file
+		VigenereBreaker vB = new VigenereBreaker();
+		HashSet<String> dictionary = vB.readDictionary(fr);
+		char c = vB.mostCommonCharin(dictionary);
+		System.out.println("Most common character in Dictionary " + c);
+	}
+	
+	
+	
 	/**
 	 * Test method for breakVigenere ()
 	 */
 	public void testBreakVignere() {
 		VigenereBreaker vB = new VigenereBreaker();
-		vB.breakVigenere();
+		String message = vB.breakVigenere();
+		System.out.println("---testBreakVignere----- Start of decrypted message ------");
+		String messageStart = message.substring(0,80);
+		System.out.println(messageStart);
 	}
 	
 	public void testBreakForLanguage() {
@@ -74,7 +87,8 @@ public class Tester {
 		FileResource fr = new FileResource();
 		HashSet<String> dictionary = vB.readDictionary(fr);
 		String decrypted = vB.breakForLanguage(message, dictionary);
-		System.out.println(decrypted);
+		String decryptedStart = decrypted.substring(0, 80);
+		System.out.println(decryptedStart);
 	}
 	
 	/**
@@ -82,13 +96,16 @@ public class Tester {
 	 */
 	public static void main(String[] args) {
 		Tester te = new Tester();
-		//VigenereBreaker vB = new VigenereBreaker();
+		VigenereBreaker vB = new VigenereBreaker();
+		vB.readAllDictionaries();
 		//te.testSliceString(); //test separately
 		//te.testTryKeyLength(); //test separately
 		//te.testBreakVignere(); //last test for practical quiz week 4
 		//te.testReadDictionary(); //Test for read dictionary
 		//te.testCountWords(); //Test for countWords. First select encrypted file, than select dictionary
-		te.testBreakForLanguage();//check with 10 keylengths
+		//te.testBreakForLanguage();//check with 100 keylengths
+		//te.testBreakVignere(); //test after implementing last changes programming exercise
+		//te.testMostCommonCharin();
 	}
 
 }
