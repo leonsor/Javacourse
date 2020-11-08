@@ -10,7 +10,7 @@ import processing.core.PGraphics;
  * 
  * @author UC San Diego Intermediate Software Development MOOC team
  * @author Your name here
- *
+ * Date:  08 NOV 20
  */
 public class CityMarker extends SimplePointMarker {
 	

@@ -1,6 +1,7 @@
 package module4;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import de.fhpotsdam.unfolding.UnfoldingMap;
@@ -20,8 +21,8 @@ import processing.core.PApplet;
 /** EarthquakeCityMap
  * An application with an interactive map displaying earthquake data.
  * Author: UC San Diego Intermediate Software Development MOOC team
- * @author Your name here
- * Date: July 17, 2015
+ * @author Leon Soroko
+ * Date:  08 NOV 20
  * */
 public class EarthquakeCityMap extends PApplet {
 	
@@ -35,13 +36,11 @@ public class EarthquakeCityMap extends PApplet {
 	private static final long serialVersionUID = 1L;
 
 	// IF YOU ARE WORKING OFFILINE, change the value of this variable to true
-	private static final boolean offline = false;
+	private static final boolean offline = true;
 	
 	/** This is where to find the local tiles, for working without an Internet connection */
 	public static String mbTilesString = "blankLight-1-3.mbtiles";
 	
-	
-
 	//feed with magnitude 2.5+ Earthquakes
 	private String earthquakesURL = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/2.5_week.atom";
 	
@@ -76,7 +75,7 @@ public class EarthquakeCityMap extends PApplet {
 		
 		// FOR TESTING: Set earthquakesURL to be one of the testing files by uncommenting
 		// one of the lines below.  This will work whether you are online or offline
-		//earthquakesURL = "test1.atom";
+		earthquakesURL = "test1.atom";
 		//earthquakesURL = "test2.atom";
 		
 		// WHEN TAKING THIS QUIZ: Uncomment the next line
@@ -93,6 +92,7 @@ public class EarthquakeCityMap extends PApplet {
 		cityMarkers = new ArrayList<Marker>();
 		for(Feature city : cities) {
 		  cityMarkers.add(new CityMarker(city));
+		  //System.out.println("City: " + city.getStringProperty("name")); //TODO remove after testing
 		}
 	    
 		//     STEP 3: read in earthquake RSS feed
@@ -109,7 +109,7 @@ public class EarthquakeCityMap extends PApplet {
 		    quakeMarkers.add(new OceanQuakeMarker(feature));
 		  }
 	    }
-
+	    System.out.println("quakeMarkers size is " + quakeMarkers.size()); //TODO delete after testing
 	    // could be used for debugging
 	    printQuakes();
 	 		
@@ -210,6 +210,19 @@ public class EarthquakeCityMap extends PApplet {
 		//  * If you know your Marker, m, is a LandQuakeMarker, then it has a "country" 
 		//      property set.  You can get the country with:
 		//        String country = (String)m.getProperty("country");
+		HashMap quakesPerCountry = new HashMap<String, Integer>();
+		int quakesInSea = 0;
+		for(Marker m : quakeMarkers) {
+			EarthquakeMarker em = (EarthquakeMarker)m;
+			if(em.isOnLand) {
+				LandQuakeMarker lm = (LandQuakeMarker)em;
+				String country = lm.getCountry();
+				if(quakesPerCountry.keySet().contains(country)) {
+					int current = quakesPerCountry.get(country}.;
+					quakesPerCountry.put(em.getProperty("country"), 1);
+				}
+			}
+		}
 		
 		
 	}
