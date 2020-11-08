@@ -54,17 +54,20 @@ public class EarthquakeCityMap extends PApplet {
 	//feed with magnitude 2.5+ Earthquakes
 	private String earthquakesURL = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/2.5_week.atom";
 
+	/*public void settings() {
+		sketchFullScreen();
+	}*/
 	
 	public void setup() {
-		size(950, 600, OPENGL);
+		size(1250, 600, P3D);
 
 		if (offline) {
-		    map = new UnfoldingMap(this, 200, 50, 700, 500, new MBTilesMapProvider(mbTilesString));
+		    map = new UnfoldingMap(this, 400, 50, 700, 500, new MBTilesMapProvider(mbTilesString));
 		    earthquakesURL = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/2.5_week.atom";//offline map only
 		    //earthquakesURL = "2.5_week.atom"; 	// Same feed, saved Aug 7, 2015, for working offline
 		}
 		else {
-			map = new UnfoldingMap(this, 200, 50, 700, 500, new Google.GoogleMapProvider());
+			map = new UnfoldingMap(this, 400, 50, 700, 500, new Google.GoogleMapProvider());
 			// IF YOU WANT TO TEST WITH A LOCAL FILE, uncomment the next line
 			//earthquakesURL = "2.5_week.atom";
 		}
@@ -149,6 +152,7 @@ public class EarthquakeCityMap extends PApplet {
 	    background(10);
 	    map.draw();
 	    addKey();
+	    //noLoop();
 	}
 
 
@@ -157,6 +161,22 @@ public class EarthquakeCityMap extends PApplet {
 	private void addKey() 
 	{	
 		// Remember you can use Processing's graphics methods here
-	
+		fill(255,255,255);
+		rect(50, 50, 300, 400);
+		fill(0,0,0);
+		textAlign(CENTER);
+		textSize(14);
+		text("Earthquake Key", 200, 100);
+		fill(color(SEVERE));
+		ellipse(75,150, 15, 15);//Severe = top
+		fill(color(MODERATE));
+		ellipse(75,250, 10, 10); //Middle = middle
+		fill(color(LIGHT));
+		ellipse(75, 350, 5, 5); //light = bottom
+		fill(0, 0, 0);
+		textAlign(LEFT);
+		text("5.0+ Magnitude", 100, 157);
+		text("4.0+ Magnitude", 100, 255);
+		text("Below 4.0", 100, 353);
 	}
 }
