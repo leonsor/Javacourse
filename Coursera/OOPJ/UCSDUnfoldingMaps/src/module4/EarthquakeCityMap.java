@@ -3,6 +3,7 @@ package module4;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import de.fhpotsdam.unfolding.UnfoldingMap;
 import de.fhpotsdam.unfolding.data.Feature;
@@ -75,7 +76,7 @@ public class EarthquakeCityMap extends PApplet {
 		
 		// FOR TESTING: Set earthquakesURL to be one of the testing files by uncommenting
 		// one of the lines below.  This will work whether you are online or offline
-		earthquakesURL = "test1.atom";
+		//earthquakesURL = "test1.atom";
 		//earthquakesURL = "test2.atom";
 		
 		// WHEN TAKING THIS QUIZ: Uncomment the next line
@@ -161,19 +162,16 @@ public class EarthquakeCityMap extends PApplet {
 	// and returns true.  Notice that the helper method isInCountry will
 	// set this "country" property already.  Otherwise it returns false.
 	private boolean isLand(PointFeature earthquake) {
-		
-		
 		// Loop over all the country markers.  
 		// For each, check if the earthquake PointFeature is in the 
 		// country in m.  Notice that isInCountry takes a PointFeature
 		// and a Marker as input.  
 		// If isInCountry ever returns true, isLand should return true.
 		for (Marker m : countryMarkers) {
-			// TODO: Finish this method using the helper method isInCountry
-			
+			if(isInCountry(earthquake, m)) {
+				return true;
+			}
 		}
-		
-		
 		// not inside any country
 		return false;
 	}
@@ -210,21 +208,28 @@ public class EarthquakeCityMap extends PApplet {
 		//  * If you know your Marker, m, is a LandQuakeMarker, then it has a "country" 
 		//      property set.  You can get the country with:
 		//        String country = (String)m.getProperty("country");
-		HashMap quakesPerCountry = new HashMap<String, Integer>();
-		int quakesInSea = 0;
+		HashMap<String, Integer> quakesPerCountry = new HashMap<String, Integer>();
+		int quakesInSea = 0;//initiate #sea quakes
 		for(Marker m : quakeMarkers) {
 			EarthquakeMarker em = (EarthquakeMarker)m;
-			if(em.isOnLand) {
+			if(em.isOnLand) { //test if marker is land marker
 				LandQuakeMarker lm = (LandQuakeMarker)em;
 				String country = lm.getCountry();
-				if(quakesPerCountry.keySet().contains(country)) {
-					int current = quakesPerCountry.get(country}.;
-					quakesPerCountry.put(em.getProperty("country"), 1);
+				if(quakesPerCountry.containsKey(country)) { //check if country alreay is in the list
+					quakesPerCountry.put(country, quakesPerCountry.get(country)+1);
+				}
+				else {
+					quakesPerCountry.put(country, 1);
 				}
 			}
+			else {
+				quakesInSea += 1;
+			}
 		}
-		
-		
+		for(Map.Entry me : quakesPerCountry.entrySet()) {
+			System.out.println(me.getKey() + " : " + me.getValue());
+		}
+		System.out.println("Amount of sea quakes: " + quakesInSea);
 	}
 	
 	
