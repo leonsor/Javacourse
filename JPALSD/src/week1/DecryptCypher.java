@@ -122,7 +122,8 @@ public class DecryptCypher {
 	 public void testDecryptTwoKeys() {
 		 //CaesarCipher cc = new CaesarCipher();
 		 //String original = "Just a test string with lots of eeeeeeeeeeeeeeeees";
-		 String encrypted = "Akag tjw Xibhr awoa aoee xakex znxag xwko"; //for Practice quiz Q9
+		 //String encrypted = "Akag tjw Xibhr awoa aoee xakex znxag xwko"; //for Practice quiz Q9
+		 String encrypted = "Aal uttx hm aal Qtct Fhljha pl Wbdl. Pvxvxlx!"; //For final quiz week 1
 		 //String encrypted = cc.encryptTwoKeys(original, 23, 2);
 		 //System.out.println(original);
 		 //System.out.println(encrypted);
@@ -135,6 +136,7 @@ public class DecryptCypher {
 		 String sb = fr.asString();
 		 String decrypted = this.decryptTwoKeys(sb);
 		 System.out.println(decrypted); // answer: Geometric computing research at Duke. Keys 17,4
+		 //answer final quiz Q8-9: Duke Computer Science Department Overview || keys 17,4
 	 }
 	/**
 	 * @param args
@@ -143,8 +145,8 @@ public class DecryptCypher {
 		DecryptCypher DC = new DecryptCypher();
 		//DC.testDecrypt();
 		//DC.testCountLetters();
-		DC.testDecryptTwoKeys();
-		//DC.decryptFile();
+		//DC.testDecryptTwoKeys();
+		DC.decryptFile();
 	}
 
 }
