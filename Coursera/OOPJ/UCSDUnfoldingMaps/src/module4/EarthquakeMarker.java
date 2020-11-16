@@ -38,7 +38,7 @@ public abstract class EarthquakeMarker extends SimplePointMarker
 	public static final float THRESHOLD_DEEP = 300;
 
 	// ADD constants for colors
-	//public final int LIGHT = Color( 51, 107, 255 ); //blue
+	//public final int LIGHT = this.color(255); //blue
 	
 	// abstract method implemented in derived classes
 	public abstract void drawEarthquake(PGraphics pg, float x, float y);
