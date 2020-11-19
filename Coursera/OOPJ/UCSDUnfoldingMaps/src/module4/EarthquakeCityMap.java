@@ -37,7 +37,7 @@ public class EarthquakeCityMap extends PApplet {
 	private static final long serialVersionUID = 1L;
 
 	// IF YOU ARE WORKING OFFILINE, change the value of this variable to true
-	private static final boolean offline = true;
+	private static final boolean offline = false;
 	
 	/** This is where to find the local tiles, for working without an Internet connection */
 	public static String mbTilesString = "blankLight-1-3.mbtiles";
@@ -112,7 +112,7 @@ public class EarthquakeCityMap extends PApplet {
 	    }
 	    System.out.println("quakeMarkers size is " + quakeMarkers.size()); //TODO delete after testing
 	    // could be used for debugging
-	    printQuakes();
+	    //printQuakes();
 	 		
 	    // (3) Add markers to map
 	    //     NOTE: Country markers are not added to the map.  They are used
@@ -130,12 +130,13 @@ public class EarthquakeCityMap extends PApplet {
 		
 	}
 	
-	// helper method to draw key in GUI
-	// TODO: Update this method as appropriate
+	/**
+	 * helper method to draw key in GUI
+	 */
 	private void addKey() {	
 		// Remember you can use Processing's graphics methods here
 		fill(255, 250, 240);
-		rect(25, 50, 150, 250);
+		rect(25, 50, 150, 450);
 		
 		fill(0);
 		textAlign(LEFT, CENTER);
@@ -151,7 +152,17 @@ public class EarthquakeCityMap extends PApplet {
 		text("City Marker", 75, 125);
 		text("Land Quake", 75, 175);
 		text("Sea Quake", 75, 225);
-		text("Size = Magnitude", 50, 275);
+		text("Size = Magnitude", 50, 250);
+		fill(color(255,255,0));
+		ellipse(50, 300, 20, 20);
+		fill(color(0,0,255));
+		ellipse(50, 325, 20, 20);
+		fill(color(255,0,0));
+		ellipse(50, 350, 20, 20);
+		fill(0);
+		text("Shallow",75, 300 );
+		text("Intermediate", 75, 325);
+		text("Deep", 75, 350);
 	}
 
 	

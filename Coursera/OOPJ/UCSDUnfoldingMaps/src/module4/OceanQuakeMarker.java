@@ -35,10 +35,11 @@ public class OceanQuakeMarker extends EarthquakeMarker {
 		float r = super.getRadius()/2;
 		pg.rect(x, y, r, r);
 		pg.popStyle();
+		String age = this.getProperty("age").toString();
+		if(age.equals("Past Day")) {	
+			pg.stroke(0);
+			pg.line(x-r, y-r, x+r, y+r);
+			pg.line(x+r, y-r, x-r, y+r);
+		}
 	}
-	
-
-
-	
-
 }

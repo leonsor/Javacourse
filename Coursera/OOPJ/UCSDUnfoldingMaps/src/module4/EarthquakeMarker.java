@@ -95,7 +95,6 @@ public abstract class EarthquakeMarker extends SimplePointMarker
 		}
 	}
 	
-	
 	/*
 	 * getters for earthquake properties
 	 */
