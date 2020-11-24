@@ -127,6 +127,7 @@ public class EarthquakeCityMap extends PApplet {
 		background(0);
 		map.draw();
 		addKey();
+		drawButtons();
 		
 	}
 	
@@ -164,9 +165,29 @@ public class EarthquakeCityMap extends PApplet {
 		text("Intermediate", 75, 325);
 		text("Deep", 75, 350);
 	}
-
+	/**
+	 * Week 5 - interactivity
+	 * Method added for drawing two buttons 
+	 */
+	public void drawButtons() {
+		fill(255, 255, 255);
+		rect(100, 100, 25, 25);
+		fill(100,100,100);
+		rect(100,150,25,25);
+	}
 	
-	
+	/**
+	 * Week 5 - interactivity
+	 * Method to determine which button was pressed and to change the color of the canvas
+	 */
+	public void mouseReleased() {
+		if(mouseX > 100 && mouseX < 125 && mouseY > 100 && mouseY < 125) {
+			background(255,255,255);
+		}
+		else if(mouseX > 100 && mouseX < 125 && mouseY > 150 && mouseY < 175) {
+			background(100, 100, 100);
+		}
+	}
 	// Checks whether this quake occurred on land.  If it did, it sets the 
 	// "country" property of its PointFeature to the country where it occurred
 	// and returns true.  Notice that the helper method isInCountry will
