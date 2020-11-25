@@ -50,7 +50,15 @@ public class CityMarker extends CommonMarker { //SimplePointMarker {
 	/** Show the title of the city if this marker is selected */
 	public void showTitle(PGraphics pg, float x, float y)
 	{
-		
+		if(super.isSelected()) {
+			String tekst = this.getCity() + ", Country: " + this.getCountry() + ", Population: " + this.getPopulation();//create the String to display
+			int l = tekst.length();//get the Lenght of the string
+			float length = (float) (l);//
+			pg.fill(204, 231, 232);
+			pg.rect(x+2, y-10, length*8, 15);
+			pg.fill(0,0,0);
+			pg.text(tekst, x, y); //, (float)(length + 2), (float)5);
+		}
 		// TODO: Implement this method
 	}
 	

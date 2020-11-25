@@ -153,6 +153,9 @@ public class EarthquakeCityMap extends PApplet {
 				m.setSelected(true);
 				System.out.println(m.getProperties().toString());
 			}
+			else {
+				m.setSelected(false);
+			}
 		}
 	}
 	
