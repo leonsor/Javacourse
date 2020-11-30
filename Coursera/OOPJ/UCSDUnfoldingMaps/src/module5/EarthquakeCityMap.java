@@ -151,7 +151,7 @@ public class EarthquakeCityMap extends PApplet {
 		for(Marker m : markers) {
 			if(m.isInside(map, x, y)) {
 				m.setSelected(true);
-				System.out.println(m.getProperties().toString());
+				//System.out.println(m.getProperties().toString());
 			}
 			else {
 				m.setSelected(false);
@@ -165,13 +165,50 @@ public class EarthquakeCityMap extends PApplet {
 	 * where the city is in the threat circle
 	 */
 	@Override
-	public void mouseClicked()
-	{
+	public void mouseClicked() {
+	
+		if(lastClicked != null) {
+			lastClicked = null;
+			unhideMarkers();
+		}/*
+		else {
+			if(lastClicked instanceof CityMarker) {
+				System.out.println("City clicked");
+			}
+			else if(lastClicked instanceof EarthquakeMarker) {
+				System.out.println("Earthquake clicked");
+			}
+		}*/
+		selectMarkerIfClicked(quakeMarkers);
+		selectMarkerIfClicked(cityMarkers);
 		// TODO: Implement this method
 		// Hint: You probably want a helper method or two to keep this code
 		// from getting too long/disorganized
+		
+		//check if Click was on earthquake
+			//show earthquake and threat circle of cities
+		//else if click was on city
+			//display earthquakes where city is in threat circle
+		//else if click was empty
+			//clear selection
+		
 	}
-	
+	public void selectMarkerIfClicked(List<Marker> markers) {
+		//TODO Helper method 
+		float x = mouseX;
+		float y = mouseY;
+		for(Marker m : markers) {
+			if(m.isInside(map, x, y)) {
+				lastClicked = (CommonMarker) m;
+				System.out.println(lastClicked.getProperties().toString());
+				hideMarkers();
+			}
+			/*else {
+				lastClicked = null;
+				unhideMarkers();
+			}*/
+		}
+	}
 	
 	// loop over and unhide all markers
 	private void unhideMarkers() {
@@ -183,7 +220,21 @@ public class EarthquakeCityMap extends PApplet {
 			marker.setHidden(false);
 		}
 	}
-	
+	/**
+	 * Loop over and hide all markers except lastClicked
+	 */
+	private void hideMarkers() {
+		for(Marker marker : cityMarkers) {
+			if(!marker.equals(lastClicked)) {
+				marker.setHidden(true);
+			}
+		}
+		for(Marker marker : quakeMarkers) {
+			if(!marker.equals(lastClicked)) {
+				marker.setHidden(true);
+			}
+		}
+	}
 	// helper method to draw key in GUI
 	private void addKey() {	
 		// Remember you can use Processing's graphics methods here
