@@ -37,7 +37,7 @@ public class EarthquakeCityMap extends PApplet {
 	private static final long serialVersionUID = 1L;
 
 	// IF YOU ARE WORKING OFFILINE, change the value of this variable to true
-	private static final boolean offline = true;
+	private static final boolean offline = false;
 	
 	/** This is where to find the local tiles, for working without an Internet connection */
 	public static String mbTilesString = "blankLight-1-3.mbtiles";
@@ -112,7 +112,7 @@ public class EarthquakeCityMap extends PApplet {
 	    }
 	    System.out.println("quakeMarkers size is " + quakeMarkers.size()); //TODO delete after testing
 	    // could be used for debugging
-	    printQuakes();
+	    //printQuakes();
 	 		
 	    // (3) Add markers to map
 	    //     NOTE: Country markers are not added to the map.  They are used
@@ -127,15 +127,17 @@ public class EarthquakeCityMap extends PApplet {
 		background(0);
 		map.draw();
 		addKey();
+		drawButtons();
 		
 	}
 	
-	// helper method to draw key in GUI
-	// TODO: Update this method as appropriate
+	/**
+	 * helper method to draw key in GUI
+	 */
 	private void addKey() {	
 		// Remember you can use Processing's graphics methods here
 		fill(255, 250, 240);
-		rect(25, 50, 150, 250);
+		rect(25, 50, 150, 450);
 		
 		fill(0);
 		textAlign(LEFT, CENTER);
@@ -143,20 +145,49 @@ public class EarthquakeCityMap extends PApplet {
 		text("Earthquake Key", 50, 75);
 		
 		fill(color(255, 0, 0));
-		ellipse(50, 125, 15, 15);
-		fill(color(255, 255, 0));
-		ellipse(50, 175, 10, 10);
-		fill(color(0, 0, 255));
-		ellipse(50, 225, 5, 5);
-		
+		triangle(50, 115, 40, 135, 60, 135);
+		fill(color(255, 255, 255));
+		ellipse(50, 175, 20, 20);
+		rect(40, 215, 20, 20);
 		fill(0, 0, 0);
-		text("5.0+ Magnitude", 75, 125);
-		text("4.0+ Magnitude", 75, 175);
-		text("Below 4.0", 75, 225);
+		text("City Marker", 75, 125);
+		text("Land Quake", 75, 175);
+		text("Sea Quake", 75, 225);
+		text("Size = Magnitude", 50, 250);
+		fill(color(255,255,0));
+		ellipse(50, 300, 20, 20);
+		fill(color(0,0,255));
+		ellipse(50, 325, 20, 20);
+		fill(color(255,0,0));
+		ellipse(50, 350, 20, 20);
+		fill(0);
+		text("Shallow",75, 300 );
+		text("Intermediate", 75, 325);
+		text("Deep", 75, 350);
 	}
-
+	/**
+	 * Week 5 - interactivity
+	 * Method added for drawing two buttons 
+	 */
+	public void drawButtons() {
+		fill(255, 255, 255);
+		rect(100, 100, 25, 25);
+		fill(100,100,100);
+		rect(100,150,25,25);
+	}
 	
-	
+	/**
+	 * Week 5 - interactivity
+	 * Method to determine which button was pressed and to change the color of the canvas
+	 */
+	public void mouseReleased() {
+		if(mouseX > 100 && mouseX < 125 && mouseY > 100 && mouseY < 125) {
+			background(255,255,255);
+		}
+		else if(mouseX > 100 && mouseX < 125 && mouseY > 150 && mouseY < 175) {
+			background(100, 100, 100);
+		}
+	}
 	// Checks whether this quake occurred on land.  If it did, it sets the 
 	// "country" property of its PointFeature to the country where it occurred
 	// and returns true.  Notice that the helper method isInCountry will

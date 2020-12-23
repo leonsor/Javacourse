@@ -1,5 +1,7 @@
 package module4;
 
+import java.awt.Color;
+
 import de.fhpotsdam.unfolding.data.PointFeature;
 import de.fhpotsdam.unfolding.marker.SimplePointMarker;
 import processing.core.PGraphics;
@@ -38,7 +40,6 @@ public abstract class EarthquakeMarker extends SimplePointMarker
 	public static final float THRESHOLD_DEEP = 300;
 
 	// ADD constants for colors
-	//public final int LIGHT = Color( 51, 107, 255 ); //blue
 	
 	// abstract method implemented in derived classes
 	public abstract void drawEarthquake(PGraphics pg, float x, float y);
@@ -82,8 +83,17 @@ public abstract class EarthquakeMarker extends SimplePointMarker
 	// You might find the getters below helpful.
 	private void colorDetermine(PGraphics pg) {
 		//TODO: Implement this method
+		float depth = this.getDepth();
+		if(depth <= THRESHOLD_INTERMEDIATE) {
+			pg.fill(255, 255, 0);//color Shallow = YELLOW
+		}
+		else if (depth > THRESHOLD_INTERMEDIATE && depth <= THRESHOLD_DEEP) {
+			pg.fill(0, 0, 255);//color Intermediate = BLUE
+		}
+		else {
+			pg.fill(255, 0, 0);//color Deep = RED
+		}
 	}
-	
 	
 	/*
 	 * getters for earthquake properties

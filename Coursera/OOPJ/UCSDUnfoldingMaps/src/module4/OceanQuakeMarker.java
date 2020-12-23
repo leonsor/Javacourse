@@ -1,7 +1,7 @@
 package module4;
 
 import de.fhpotsdam.unfolding.data.PointFeature;
-import processing.core.PGraphics;
+import processing.core.*;
 
 /** Implements a visual marker for ocean earthquakes on an earthquake map
  * 
@@ -30,11 +30,16 @@ public class OceanQuakeMarker extends EarthquakeMarker {
 		// and how it is set in the EarthquakeMarker constructor
 		
 		// TODO: Implement this method
-		
+		pg.pushStyle();
+		pg.rectMode(PConstants.RADIUS);
+		float r = super.getRadius()/2;
+		pg.rect(x, y, r, r);
+		pg.popStyle();
+		String age = this.getProperty("age").toString();
+		if(age.equals("Past Day")) {	
+			pg.stroke(0);
+			pg.line(x-r, y-r, x+r, y+r);
+			pg.line(x+r, y-r, x-r, y+r);
+		}
 	}
-	
-
-
-	
-
 }

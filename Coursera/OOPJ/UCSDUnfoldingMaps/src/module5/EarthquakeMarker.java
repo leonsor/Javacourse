@@ -6,8 +6,8 @@ import processing.core.PGraphics;
 /** Implements a visual marker for earthquakes on an earthquake map
  * 
  * @author UC San Diego Intermediate Software Development MOOC team
- * @author Your name here
- *
+ * @author Leon
+ * Date: 24 NOV 20
  */
 public abstract class EarthquakeMarker extends CommonMarker
 {
@@ -93,6 +93,15 @@ public abstract class EarthquakeMarker extends CommonMarker
 	@Override
 	public void showTitle(PGraphics pg, float x, float y)
 	{
+		if(super.isSelected()) {
+			String tekst = this.getTitle();//create the String to display
+			int l = tekst.length();//get the Lenght of the string
+			float length = (float) (l);//
+			pg.fill(204, 231, 232);
+			pg.rect(x+2, y-10, length*8, 15);
+			pg.fill(0,0,0);
+			pg.text(tekst, x, y); //, (float)(length + 2), (float)5);
+		}
 		// TODO: Implement this method
 		
 	}
