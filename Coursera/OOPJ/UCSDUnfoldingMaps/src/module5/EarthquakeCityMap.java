@@ -145,13 +145,11 @@ public class EarthquakeCityMap extends PApplet {
 	// 
 	private void selectMarkerIfHover(List<Marker> markers)
 	{
-		// TODO: Implement this method
 		float x = mouseX;
 		float y = mouseY;
 		for(Marker m : markers) {
 			if(m.isInside(map, x, y)) {
 				m.setSelected(true);
-				//System.out.println(m.getProperties().toString());
 			}
 			else {
 				m.setSelected(false);
@@ -170,21 +168,14 @@ public class EarthquakeCityMap extends PApplet {
 		if(lastClicked != null) {
 			lastClicked = null;
 			unhideMarkers();
-		}/*
-		else {
-			if(lastClicked instanceof CityMarker) {
-				System.out.println("City clicked");
-			}
-			else if(lastClicked instanceof EarthquakeMarker) {
-				System.out.println("Earthquake clicked");
-			}
-		}*/
+		}
+		
 		selectMarkerIfClicked(quakeMarkers);
 		selectMarkerIfClicked(cityMarkers);
-		// TODO: Implement this method
 		// Hint: You probably want a helper method or two to keep this code
 		// from getting too long/disorganized
 		
+		//My implementation below
 		//check if Click was on earthquake
 			//show earthquake and threat circle of cities
 		//else if click was on city
@@ -200,8 +191,14 @@ public class EarthquakeCityMap extends PApplet {
 		for(Marker m : markers) {
 			if(m.isInside(map, x, y)) {
 				lastClicked = (CommonMarker) m;
-				System.out.println(lastClicked.getProperties().toString());
-				hideMarkers();
+				if(lastClicked instanceof CityMarker) { 
+					System.out.println("City clicked");
+					showAffectedByEarthquake((CityMarker) m);
+				}
+				else if(lastClicked instanceof EarthquakeMarker) {
+					System.out.println("Earthquake clicked");
+					hideUnaffectedCityMarkers((EarthquakeMarker) m);
+				}
 			}
 			/*else {
 				lastClicked = null;
@@ -210,7 +207,9 @@ public class EarthquakeCityMap extends PApplet {
 		}
 	}
 	
-	// loop over and unhide all markers
+	/**
+	 * loop over and unhide all markers
+	 */
 	private void unhideMarkers() {
 		for(Marker marker : quakeMarkers) {
 			marker.setHidden(false);
@@ -220,10 +219,12 @@ public class EarthquakeCityMap extends PApplet {
 			marker.setHidden(false);
 		}
 	}
+	
 	/**
 	 * Loop over and hide all markers except lastClicked
+	 * Has become obsolete due to the implementation of hideUnaffectedCityMarkers() and showAffectedByEarthquake() functions
 	 */
-	private void hideMarkers() {
+	/*private void hideMarkers() {
 		for(Marker marker : cityMarkers) {
 			if(!marker.equals(lastClicked)) {
 				marker.setHidden(true);
@@ -234,7 +235,55 @@ public class EarthquakeCityMap extends PApplet {
 				marker.setHidden(true);
 			}
 		}
+	}*/
+	
+	/**
+	 * Helper method to check whether a city is in the threatCircle of the selected earthquake
+	 * If so, the city remains drawn, if not affected, the city marker disappears.
+	 * All earthquake markers except the selected marker will also disappear. 
+	 * @param e the selected earthquake
+	 */
+	private void hideUnaffectedCityMarkers(EarthquakeMarker e) {
+		double threatCircle = e.threatCircle(); //determine radius of impact of earthquake clicked
+		for(Marker marker : cityMarkers) {
+			double distance = marker.getDistanceTo(e.getLocation()); //determine distance from current marker to earthquake
+			if(distance > threatCircle) { //If outside threatcircle, hide citymarker
+				marker.setHidden(true);
+			} 
+			else { //TODO only for testing purposes
+				System.out.println("distance: " + (int) distance + ", threatcircle: " + (int)threatCircle + " , visibility = " + (distance < threatCircle));
+			}
+		}
+		for(Marker marker : quakeMarkers) { //Hide all quake markers except the clicked one
+			if(!marker.equals(lastClicked)) {
+				marker.setHidden(true);
+			}
+		}
 	}
+	
+	/**
+	 * Helper function to check which earthquakes are in the threatcircle given a selected town
+	 * If the city is selected, the associated earthquakes which have a threatcircle bigger than the distance to this city
+	 * will be shown. All others will be set hidden, as well as the other cities. This will last until we click outside an 
+	 * Earthquake or city.
+	 * @param c is the city we want to show.
+	 */
+	public void showAffectedByEarthquake(CityMarker c) {
+		Location cityLocation = c.getLocation(); //create variable with location of clicked city
+		for(Marker marker : quakeMarkers) { //for each earthquake do
+			double distance = marker.getDistanceTo(cityLocation); //determine distance from city to earthquake
+			EarthquakeMarker e = (EarthquakeMarker) marker; //create an EarthquakeMarker from marker
+			if(distance > e.threatCircle()) { //check whether the distance from city to earthquake is bigger than the threatCircle
+				marker.setHidden(true); //hide earthquake if true
+			}
+		}
+		for(Marker marker : cityMarkers) { //for all citymarkers
+			if(!marker.equals(lastClicked)) { //except the city in lastclicked 
+				marker.setHidden(true); //hide markers
+			}
+		}
+	}
+	
 	// helper method to draw key in GUI
 	private void addKey() {	
 		// Remember you can use Processing's graphics methods here
@@ -294,8 +343,7 @@ public class EarthquakeCityMap extends PApplet {
 
 		strokeWeight(2);
 		line(centerx-8, centery-8, centerx+8, centery+8);
-		line(centerx-8, centery+8, centerx+8, centery-8);
-			
+		line(centerx-8, centery+8, centerx+8, centery-8);	
 	}
 
 	
