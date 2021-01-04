@@ -1,7 +1,9 @@
 package module6;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import de.fhpotsdam.unfolding.UnfoldingMap;
@@ -21,8 +23,8 @@ import processing.core.PApplet;
 /** EarthquakeCityMap
  * An application with an interactive map displaying earthquake data.
  * Author: UC San Diego Intermediate Software Development MOOC team
- * @author Your name here
- * Date: July 17, 2015
+ * @author Leon Soroko
+ * Date: 04 JAN 21
  * */
 public class EarthquakeCityMap extends PApplet {
 	
@@ -116,7 +118,8 @@ public class EarthquakeCityMap extends PApplet {
 	    }
 
 	    // could be used for debugging
-	    printQuakes();
+	    //printQuakes();
+	    sortAndPrint(20); //For testing new method, change amount to what you want to see
 	 		
 	    // (3) Add markers to map
 	    //     NOTE: Country markers are not added to the map.  They are used
@@ -132,12 +135,26 @@ public class EarthquakeCityMap extends PApplet {
 		background(0);
 		map.draw();
 		addKey();
-		
 	}
 	
 	
 	// TODO: Add the method:
-	//   private void sortAndPrint(int numToPrint)
+	private void sortAndPrint(int numToPrint) {
+		List<EarthquakeMarker> quakesSorted = new ArrayList<EarthquakeMarker>();
+		System.out.println("Original Array has objects: " + quakeMarkers.size()); // TODO delete after testing
+		for(Marker m : quakeMarkers) {
+			quakesSorted.add((EarthquakeMarker) m);
+		}
+		System.out.println("new Array quakesSorted has objects: " + quakesSorted.size());// TODO delete after testing
+		Collections.sort(quakesSorted);//sort ArrayList by magnitude as implemented in EarthquakeMarker
+		System.out.println("printing of first 10 quakes or full list if less quakes started"); //TODO remove after testing
+		if(numToPrint > quakesSorted.size()) {//To check if numToPrint is not bigger than amount of quakes
+			numToPrint = quakesSorted.size(); //reduce numToPrint to amount of quakes available
+		}
+		for(int i = 0; i < numToPrint; i++) {
+			System.out.println(quakesSorted.get(i).toString());//print quake
+		}
+	}
 	// and then call that method from setUp
 	
 	/** Event handler that gets called automatically when the 

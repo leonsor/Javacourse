@@ -1,0 +1,50 @@
+public static String findAirportCode(String toFind, Airport[] airports) {
+	for(airport a: airports) {
+		if(a.getCity().equals airportSearch) {
+			return a.getCode();
+		}
+	}
+	return "airport" + toFind + " not found";
+}
+
+public static String findAirportCodeBS(String toFind, Airport[] airports) {
+	int low = 0;
+	int high = airports.lenght();
+	int mid;
+	while(low <= high) {
+		mid = (low+high)/2;// better is mid = low + ((high-low)/2) to prevent integer overflow
+		int compare = toFind.compareTo(airports[mid].getCity();
+		//returns -1 if smaller, +1 if bigger and 0 if equal (found the city!)
+		if(compare < 0) {
+			high = mid - 1;
+		}
+		else if(compare > 0) {
+			low = mid + 1;
+		}
+		else {
+			return airports[mid].getCode()
+		}
+	}
+	return null;
+}
+
+Selection Sort
+Insertion Sort
+Merge Sort -> build in sort method with Collections.sort(list)
+
+In order to use this on Objects in stead of integers, Comparable must be used.
+The class must implement the Comparable<Class> in order to do so. Therefore the method
+compareTo(Class other) must be written.
+	public int compareTo(Class other) which returns an integer
+		Smaller.compareTo(Bigger)	->	Negative
+		Bigger.compareTo(Smaller)	->	Positive
+		Same.compareTo(Same)			->	0
+
+Notes during programming assignment:
+Error messages after implementing Comparable<EarthquakeMarker>
+1. Description	Resource	Path	Location	Type
+The type LandQuakeMarker must implement the inherited abstract method Comparable<EarthquakeMarker>.compareTo(EarthquakeMarker)	LandQuakeMarker.java	/UCSDUnfoldingMaps/src/module6	line 11	Java Problem
+2. The type OceanQuakeMarker must implement the inherited abstract method Comparable<EarthquakeMarker>.compareTo(EarthquakeMarker)
+
+
+		
