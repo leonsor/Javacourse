@@ -1,5 +1,5 @@
 /build/
-/data/
+# /data/
 /lib/
 
 # Compiled source #
@@ -49,3 +49,5 @@ nbproject
 .project
 .settings
 composer.lock
+/blankDark-1-3.mbtiles
+/blankLight-1-3.mbtiles
