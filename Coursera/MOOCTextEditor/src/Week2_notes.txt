@@ -1,0 +1,23 @@
+Data Structures and Performance - Week 2 Notes
+
+Flesch score: measure of readability
+calculation: 206.835 - 1.015 * (#words/#sentences) - 84.6 * (#syllables / #words)
+
+String example = new String("example string") creates new String Object
+String example = "example string") creates an Interned string
+
+String comparison:
+text.equals(text1)	->	compares characters in the string
+text == text1	->	compares if it points to the same String Object, not the value of the object.
+
+split(String string) returns an Array of substrings on the basis of spaces between the words
+split(String regex) 
+Regular expressions: 
+-	Repetition:		use + sign for one or more occurrences (like space)	->	(" +")
+					use * sign for zero or more occurrences -> ("it*") matches i, it, itt, ittt etc.
+-	Concatenation:	combining two or more regexs ->	("it")
+-	Concatenation and Repetition:	a combination of both of the above ->	("it+")
+-	Alternation:	AND or OR choice, use | between two regexs-> ("at|st") means both at and st will be matched
+					Character Classes match each character between the brackets -> ("[1, 2, 3]") matches 1 and 2 and 3
+					They can also be used to match a range with the - sign -> ("[1 - 3]") matches 1 and 2 and 3
+					Use ^ to exclude characters 
