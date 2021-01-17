@@ -5,6 +5,7 @@ package document;
  * @author UC San Diego Intermediate Programming MOOC team
  */
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -67,7 +68,33 @@ public abstract class Document {
 		// TODO: Implement this method so that you can call it from the 
 	    // getNumSyllables method in BasicDocument (module 2) and 
 	    // EfficientDocument (module 3).
-	    return 0;
+		List<String> vowels = Arrays.asList("a", "A", "e", "E", "i", "I", "o", "O", "u", "U", "y", "Y");
+		int counter = 0; //each word has at least one syllable
+		boolean isVowel = false;
+		if(word.length() <= 3) {
+			return 1; //word has only one or two characters, resulting in one Syllable
+		}
+		for(int i = 0; i < word.length(); i++) {
+			char c = word.charAt(i);
+			if(vowels.contains("" + c))  { //c is vowel 
+				if(word.length()== 1) { // a one character word 
+					return 1;
+				}
+				if(!isVowel) { //previous char was not a vowel
+					if(c == 'e' && ((i == word.length()-1))) { //c = 'e' and not the last character in a word
+						return counter; // end of word with e, no increment
+					}
+					else {
+						counter ++; //increment the amount of Syllables
+						isVowel = true; // to prevent each vowel to trigger incrementing the counter
+					}
+				}
+			}
+			else {
+				isVowel = false;
+			}
+		}
+	    return counter;
 	}
 	
 	/** A method for testing
@@ -130,9 +157,18 @@ public abstract class Document {
 	/** return the Flesch readability score of this document */
 	public double getFleschScore()
 	{
-	    // TODO: You will play with this method in week 1, and 
-		// then implement it in week 2
-	    return 0.0;
+	    int numWords = this.getNumWords();
+	    int numSentences = this.getNumSentences();
+	    int numSyllables = this.getNumSyllables();
+	    /* For test purposes. It is required to cast each devision to double to achieve the correct outcome
+	    System.out.println("number of words: " + numWords);
+	    System.out.println("number of Sentences: " + numSentences);
+	    System.out.println("number of Syllables: " + numSyllables);
+	    System.out.println("words/sentences * -1.015: " + (-1.015 * (numWords / numSentences)));
+	    System.out.println("syllables/words: " + ((double)numSyllables/numWords));
+	    System.out.println("syllables/words * -84.6: " + (-84.6 * ((double)numSyllables/numWords)));*/
+	    double fleschScore = 206.835 - (1.015 * ((double)numWords / numSentences)) - (84.6 * ((double)numSyllables / numWords));
+	    return fleschScore;
 	}
 	
 	

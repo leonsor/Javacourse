@@ -52,3 +52,5 @@ nbproject
 .project
 .settings
 composer.lock
+/README
+/.classpath
