@@ -1,0 +1,91 @@
+Data Structures and Performance - Week 3 Notes
+
+Strategy for calculating performance:
+	1.	Count the amount of operations instead of time
+	2.	Focus on how performance scales (bigger input)
+	3.	Go beyond input size (how does the algorithm react to different situations)
+	
+Asymptotic Analysis: 
+
+	Size of input is represented by letter N.
+	Constant time = no change related to size of input.
+	linear time: the amount of operations grows incrementally when the input is bigger
+	
+Big O classes:
+	f(n) = O (g(n)) means both functions grow as their input grows.
+	Big O notation captures the rate of growth of two functions
+	Principles: 
+	-	Drop constants -> we don't care about the constants that are always required (like initializing the process)
+	-	Keep only the dominant term -> only interested in the part which has the biggest impact when input changes (fastest growing)
+		3n+3 = O(3n) = O(n)
+	Computing multiple functions
+	-	Adding of big O -> O(n) + O(n) = O(2n) = O(n) (drop constants)
+	Computing nested functions:
+	-	start from the inside out
+	-	Multiplication of big O -> O(n) * O(n) = O(n^2)
+		
+	1.	O(1), O(log n)	-	best performance
+	2.	O(n)
+	3.	O(n log n)
+	4.	O(n^2)
+	5.	O(2^n)
+	6.	O(n!)			-	worst performance
+	
+	Performance
+	Worst case:	worst possible performance of fixed size n
+	Average case: Average possible performance of any size of n
+	Best case: Best possible performance of algorithm for any input (of fixed size n)
+	
+	Search algorithms:	best case	|	worst case
+	linear search			O(1)	|		O(n)
+	binary search			O(1)	|		O(log n) each time we half the list
+	
+	Sorting algorithms:	best case	|	worst case
+	selection sort			O(n^2)	|		O(n^2)	always goes through the same process (nested loop)
+	insertion sort			O(n)	|		O(n^2)
+	
+		
+Cheat sheet
+List                 | Add  | Remove | Get  | Contains | Next | Data Structure
+---------------------|------|--------|------|----------|------|---------------
+ArrayList            | O(1) |  O(n)  | O(1) |   O(n)   | O(1) | Array
+LinkedList           | O(1) |  O(1)  | O(n) |   O(n)   | O(1) | Linked List
+CopyOnWriteArrayList | O(n) |  O(n)  | O(1) |   O(n)   | O(1) | Array
+
+
+
+Set                   |    Add   |  Remove  | Contains |   Next   | Size | Data Structure
+----------------------|----------|----------|----------|----------|------|-------------------------
+HashSet               | O(1)     | O(1)     | O(1)     | O(h/n)   | O(1) | Hash Table
+LinkedHashSet         | O(1)     | O(1)     | O(1)     | O(1)     | O(1) | Hash Table + Linked List
+EnumSet               | O(1)     | O(1)     | O(1)     | O(1)     | O(1) | Bit Vector
+TreeSet               | O(log n) | O(log n) | O(log n) | O(log n) | O(1) | Red-black tree
+CopyOnWriteArraySet   | O(n)     | O(n)     | O(n)     | O(1)     | O(1) | Array
+ConcurrentSkipListSet | O(log n) | O(log n) | O(log n) | O(1)     | O(n) | Skip List
+
+
+
+Queue                   |  Offer   | Peak |   Poll   | Remove | Size | Data Structure
+------------------------|----------|------|----------|--------|------|---------------
+PriorityQueue           | O(log n) | O(1) | O(log n) |  O(n)  | O(1) | Priority Heap
+LinkedList              | O(1)     | O(1) | O(1)     |  O(1)  | O(1) | Array
+ArrayDequeue            | O(1)     | O(1) | O(1)     |  O(n)  | O(1) | Linked List
+ConcurrentLinkedQueue   | O(1)     | O(1) | O(1)     |  O(n)  | O(n) | Linked List
+ArrayBlockingQueue      | O(1)     | O(1) | O(1)     |  O(n)  | O(1) | Array
+PriorirityBlockingQueue | O(log n) | O(1) | O(log n) |  O(n)  | O(1) | Priority Heap
+SynchronousQueue        | O(1)     | O(1) | O(1)     |  O(n)  | O(1) | None!
+DelayQueue              | O(log n) | O(1) | O(log n) |  O(n)  | O(1) | Priority Heap
+LinkedBlockingQueue     | O(1)     | O(1) | O(1)     |  O(n)  | O(1) | Linked List
+
+
+
+Map                   |   Get    | ContainsKey |   Next   | Data Structure
+----------------------|----------|-------------|----------|-------------------------
+HashMap               | O(1)     |   O(1)      | O(h / n) | Hash Table
+LinkedHashMap         | O(1)     |   O(1)      | O(1)     | Hash Table + Linked List
+IdentityHashMap       | O(1)     |   O(1)      | O(h / n) | Array
+WeakHashMap           | O(1)     |   O(1)      | O(h / n) | Hash Table
+EnumMap               | O(1)     |   O(1)      | O(1)     | Array
+TreeMap               | O(log n) |   O(log n)  | O(log n) | Red-black tree
+ConcurrentHashMap     | O(1)     |   O(1)      | O(h / n) | Hash Tables
+ConcurrentSkipListMap | O(log n) |   O(log n)  | O(1)     | Skip List
