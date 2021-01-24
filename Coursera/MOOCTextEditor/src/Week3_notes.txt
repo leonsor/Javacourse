@@ -10,6 +10,7 @@ Asymptotic Analysis:
 	Size of input is represented by letter N.
 	Constant time = no change related to size of input.
 	linear time: the amount of operations grows incrementally when the input is bigger
+	Asymptotic Analysis is not the only measure of performance
 	
 Big O classes:
 	f(n) = O (g(n)) means both functions grow as their input grows.
@@ -24,7 +25,7 @@ Big O classes:
 	-	start from the inside out
 	-	Multiplication of big O -> O(n) * O(n) = O(n^2)
 		
-	1.	O(1), O(log n)	-	best performance
+	1.	O(1), O(log n)	-	best performance (base of logarithm does not matter!)
 	2.	O(n)
 	3.	O(n log n)
 	4.	O(n^2)
@@ -43,8 +44,24 @@ Big O classes:
 	Sorting algorithms:	best case	|	worst case
 	selection sort			O(n^2)	|		O(n^2)	always goes through the same process (nested loop)
 	insertion sort			O(n)	|		O(n^2)
+	Merge Sort				O(n log n)		O(n log n)
 	
-		
+Selection Sort	strategy is going to look at each position in the array in turn. And for each of those positions, 
+				find the right element to put in there. And so we look at all of the possible elements remaining in the array. 
+				And figure out which one of those is smallest and put it in this current position.
+Insertion Sort	Check one new element of the array at a time. For that new element put it in its correct location relative 
+				to the earlier ones that have been sorted already. We assume that at each point we have that initial piece of 
+				the arrays already sorted. What we need to do is figure out where the next element goes by comparing that 
+				next element to the highest element in the sorted part of the array and see if we need to swap them
+Merge Sort -> 	build in sort method with Collections.sort(list)
+				If list is one object, return list, else
+				divide list in two parts continuously, sort both lists, merge lists into one list
+				
+Bench Marking: measuring time of two different programs on the same system, or the same program on two different systems.
+	nanoTime() is build in JAVA time returning a long displaying JAVA Virtual Machine high resolution time source in nanoSeconds.
+				long startTime = System.nanoTime(); long endTime = System.nanoTime();
+				double estTime = (endTime - startTime) / 100000000.0 ;
+	
 Cheat sheet
 List                 | Add  | Remove | Get  | Contains | Next | Data Structure
 ---------------------|------|--------|------|----------|------|---------------
