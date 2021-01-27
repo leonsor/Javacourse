@@ -17,6 +17,14 @@ public class MyLinkedList<E> extends AbstractList<E> {
 	/** Create a new empty LinkedList */
 	public MyLinkedList() {
 		// TODO: Implement this method
+		head = new LLNode<E>(null);
+		System.out.println("head gemaakt");
+		tail = new LLNode<E>(null);
+		System.out.println("tail gemaakt");
+		size = 0;
+		head.next = tail;
+		tail.prev = head;
+		System.out.println("Linked List gemaakt met head and tail nodes. ");
 	}
 
 	/**
@@ -26,7 +34,14 @@ public class MyLinkedList<E> extends AbstractList<E> {
 	public boolean add(E element ) 
 	{
 		// TODO: Implement this method
-		return false;
+		LLNode<E> newElement = new LLNode<E>(element);
+		newElement.next = head.next;
+		newElement.prev = head;
+		tail.prev = newElement;
+		head.next = newElement;
+		size = size + 1;
+		System.out.println("Element toegevoegd, size is: " + size + ", Element is: " + element);
+		return true;
 	}
 
 	/** Get the element at position index 
@@ -34,7 +49,8 @@ public class MyLinkedList<E> extends AbstractList<E> {
 	public E get(int index) 
 	{
 		// TODO: Implement this method.
-		return null;
+		E getNode = this.get(index);
+		return getNode;
 	}
 
 	/**
@@ -52,7 +68,8 @@ public class MyLinkedList<E> extends AbstractList<E> {
 	public int size() 
 	{
 		// TODO: Implement this method
-		return -1;
+		//return -1;
+		return this.size;
 	}
 
 	/** Remove a node at the specified index and return its data element.
@@ -95,6 +112,9 @@ class LLNode<E>
 		this.data = e;
 		this.prev = null;
 		this.next = null;
+		if(e != null) {
+			System.out.println("Node gemaakt!, data is:" + e.toString());
+		}
 	}
-
+	
 }

@@ -24,7 +24,7 @@ public class DocumentBenchmarking {
 		
 	    // The amount of characters to increment each step
 	    // You can play around with this
-		int increment = 20000;
+		int increment = 2000;
 
 		// The number of steps to run.  
 		// You can play around with this.
@@ -32,7 +32,7 @@ public class DocumentBenchmarking {
 		
 		// THe number of characters to start with. 
 		// You can play around with this.
-		int start = 50000;
+		int start = 5000;
 		//System.out.println("NumberOfChars" + "\t" + "BasicTime" + "\t" + "EfficientTime");		
 		// TODO: Fill in the rest of this method so that it runs two loops
 		// and prints out timing results as described in the assignment 

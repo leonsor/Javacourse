@@ -1,0 +1,47 @@
+Data Structures and Performance - Week 4 Notes
+
+Abstraction: hiding irrelevant detail to focus on the essential features needed to understand and use a thing. It is divided
+into: 
+	behavior specific			:	user interface (abstract class or interface). Example: List
+	implementation specific		:	Data structure (how data is stored). Example: ArrayList
+	
+Abstract Data type -> specifies functionality and not efficiency
+Data Structure -> 
+
+Linked List
+	Doubly linked list - contains a pointer to head and tail and each element has a reference to previous and next element
+	Sindly linked list - only a head pointer and references to next element
+	
+	Two Classes in LinkedList to implement
+		NodeList (to previous and next element)
+		MyLinkedList (pointers to head and tail)
+		Alternative implementation -> dummy (Sentinel) nodes, empty nodes which contain no data but only next and previous pointers
+		
+Implementation:
+class ListNode<E> {
+	ListNode<E> next; 			(recursive data type!)
+	ListNode<E> previous;		default value for next and previous is Null
+	E data; 
+	
+	public ListNode(E theData) 
+	{
+		this.data = theData;
+	}
+}
+
+public class MyLinkedList<E> 
+{
+	private ListNode<E> head;
+	private ListNode<E> tail;
+	private int size;
+	
+	public MyLinkedList()
+	{
+		size = 0;
+		head = new ListNode<E>(null);
+		tail = new ListNode<E>(null);
+		head.next = tail;
+		tail.prev = head;
+	}
+}
+		

@@ -32,7 +32,7 @@ public class MyLinkedListTester {
 	    shortList = new MyLinkedList<String>();
 		shortList.add("A");
 		shortList.add("B");
-		emptyList = new MyLinkedList<Integer>();
+		emptyList = new MyLinkedList<Integer>(); 
 		longerList = new MyLinkedList<Integer>();
 		for (int i = 0; i < LONG_LIST_LENGTH; i++)
 		{
@@ -42,6 +42,7 @@ public class MyLinkedListTester {
 		list1.add(65);
 		list1.add(21);
 		list1.add(42);
+		System.out.println("shortList size = " + shortList.size);
 		
 	}
 
