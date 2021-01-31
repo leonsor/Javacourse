@@ -86,7 +86,9 @@ public class MyLinkedListGrader {
 
                 feedback += "** Test #9: Testing add, remove, and add on new list...";
 		lst = new MyLinkedList<Integer>();
+//		lst.add(5);//TODO delete
 		lst.add(0, 1);
+		System.out.println("Size of lst after adding = " + lst.size);//TODO delete
 		lst.remove(0);
 		lst.add(0, 1);
                 feedback += "Got " + printListForwards(lst) + ". ";
@@ -109,3 +111,15 @@ public class MyLinkedListGrader {
 	
 	
 }
+/* Extra testen voor 11 t/m 20
+ * ** Test #11: Testing lower bound of get...FAILED. Your list should throw an exception on a negative 'get'. 
+** Test #12: Testing upper bound of get...FAILED. Expected IndexOutOfBoundsException, got java.lang.NullPointerException. 
+** Test #13: Testing lower bound of set...FAILED. Your list should throw an exception when the index of 'set' is too low. 
+** Test #14: Testing upper bound of set...FAILED. Expected IndexOutOfBoundsException, got java.lang.NullPointerException. 
+** Test #15: Using set with null value...FAILED. Your list should throw an exception when the element of 'set' is null. 
+** Test #16: Testing lower bound of remove...FAILED. Your list should throw an exception when the index of 'remove' is too low. 
+** Test #17: Testing upper bound of remove...FAILED. Expected IndexOutOfBoundsException, got java.lang.NullPointerException. 
+** Test #18: Testing lower bound of add...FAILED. Your list should throw an exception when the index of 'add' is too low. 
+** Test #19: Testing upper bound of add...FAILED. Expected IndexOutOfBoundsException, got java.lang.NullPointerException. 
+** Test #20: Adding null element...FAILED. Your list shafdsaould throw an exception*/
+

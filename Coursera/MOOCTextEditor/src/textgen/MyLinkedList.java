@@ -30,15 +30,23 @@ public class MyLinkedList<E> extends AbstractList<E> {
 	/**
 	 * Appends an element to the end of the list
 	 * @param element The element to add
+	 * @throws NullPointerException
 	 */
 	public boolean add(E element ) 
 	{
 		// TODO: Implement this method
+		if(element.equals(null)) {
+			throw new NullPointerException("Adding an element without any data is not allowed");
+		}
 		LLNode<E> newElement = new LLNode<E>(element);
-		newElement.next = head.next;
-		newElement.prev = head;
+		newElement.prev = tail.prev; //adding element at the end
+		(tail.prev).next = newElement;
+		newElement.next = tail;
 		tail.prev = newElement;
-		head.next = newElement;
+		/*(head.next).prev = newElement; adding element at the beginning.
+		newElement.next = head.next;
+		newElement.prev = null;
+		head.next = newElement;*/
 		size = size + 1;
 		System.out.println("Element toegevoegd, size is: " + size + ", Element is: " + element);
 		return true;
@@ -49,26 +57,63 @@ public class MyLinkedList<E> extends AbstractList<E> {
 	public E get(int index) 
 	{
 		// TODO: Implement this method.
-		E getNode = this.get(index);
-		return getNode;
+		if(index >= this.size  || index < 0) {
+			throw new IndexOutOfBoundsException("index falls outside size of LinkedList");//return null;
+		}
+		LLNode<E> search = head;
+		for(int i = 0; i < this.size; i++) {
+			LLNode<E> getNode = search.next;
+			if(i == index) {
+				return getNode.getData();
+			}
+			else {
+				search = search.next;
+			}
+		}
+		return null;
 	}
 
 	/**
 	 * Add an element to the list at the specified index
 	 * @param The index where the element should be added
 	 * @param element The element to add
+	 * @throws NullPointerException
+	 * @throws IndexOutOfBoundsException
 	 */
 	public void add(int index, E element ) 
 	{
 		// TODO: Implement this method
+		if(element.equals(null)) {
+			throw new NullPointerException("Adding an element without any data is not allowed");
+		}
+		System.out.println("test add at index: inserting at index " + index + ", list size was: " + this.size);
+		if(index == this.size) {//list empty or insert after current last element
+			this.add(element);
+		} 			
+		else if(index >= 0 && index < this.size) {//index < amount of existing elements AND > 0 (list not empty) 
+			LLNode<E> search = head.next;//search initialized with first element
+			for(int i = 0; i < this.size; i++) {
+				if(i == index) {//index found
+					LLNode<E> insert = new LLNode<E>(element);//make new element with data E
+					insert.next = search;//link new element.next element previous at index
+					insert.prev = search.prev;//link new element.prev to element previously linked at index
+					(search.prev).next = insert;//link previous element to new element
+					search.prev = insert;
+					this.size++;
+					System.out.println("Element toegevoegd at index: " + i + ", new size is: " + size + ", Element is: " + element);
+				} else {//not the right index
+					search = search.next;//search initialized with next element 
+				}
+			}
+		} else {
+			throw new IndexOutOfBoundsException("Cannot insert at given index");
+		}
 	}
 
 
 	/** Return the size of the list */
 	public int size() 
 	{
-		// TODO: Implement this method
-		//return -1;
 		return this.size;
 	}
 
@@ -81,6 +126,21 @@ public class MyLinkedList<E> extends AbstractList<E> {
 	public E remove(int index) 
 	{
 		// TODO: Implement this method
+		if(index >= this.size  || index < 0) {
+			throw new IndexOutOfBoundsException("index falls outside size of LinkedList");//return null;
+		}
+		LLNode<E> search = head.next;
+		for(int i = 0; i < this.size; i++) {
+//			LLNode<E> getNode = search.next;
+			if(i == index) {
+				System.out.println("remove: Deleting element " + search.getData() + " at index " + i);
+				(search.prev).next = search.next;
+				(search.next).prev = search.prev;
+				size --;
+				return search.getData();
+			}
+			search = search.next;
+		}
 		return null;
 	}
 
@@ -94,8 +154,43 @@ public class MyLinkedList<E> extends AbstractList<E> {
 	public E set(int index, E element) 
 	{
 		// TODO: Implement this method
-		return null;
-	}   
+		LLNode<E> returnSearch = new LLNode<E>(null);//new node in order to return data
+		if(element.equals(null)) { //not allowed to add element with no data 
+			throw new NullPointerException("Adding an element without any data is not allowed");
+		}
+		if(index >= 0 && index < this.size) {//index < amount of existing elements AND > 0 (list not empty) 
+			LLNode<E> search = head.next;//search initialized with first element
+			for(int i = 0; i < this.size; i++) {
+				if(i == index) {//index found
+					returnSearch.data = search.data; //replace returnSearch with element to return
+					System.out.println("Replaced old Element " + search.getData() + " at index: " + i + ", new element is: " + element);
+					search.data = element; //save new data in existing element
+					return returnSearch.getData();
+				} else {//not the right index
+					search = search.next;//search initialized with next element 
+				}
+			}
+		} 
+		else {
+			throw new IndexOutOfBoundsException("Cannot insert at given index");
+		}
+		return returnSearch.getData();
+	}
+	
+	/**
+	 * Prints out all elements of MyLinkedList
+	 */
+	@Override
+	public String toString() {
+		if(this.size == 0) {
+			return "No Elements in list";
+		}
+		String s = "Element ";
+		for(int i = 0; i < this.size; i++) {
+			s = s + i + " = " + this.get(i).toString() + ", ";
+		}
+		return s;
+	}
 }
 
 class LLNode<E> 
@@ -115,6 +210,13 @@ class LLNode<E>
 		if(e != null) {
 			System.out.println("Node gemaakt!, data is:" + e.toString());
 		}
+	}
+	public E getData() {
+		return this.data;
+	}
+	
+	public String toString() {
+		return (String) data;
 	}
 	
 }

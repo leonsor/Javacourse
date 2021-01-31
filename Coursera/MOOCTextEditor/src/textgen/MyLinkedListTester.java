@@ -28,6 +28,7 @@ public class MyLinkedListTester {
 	 */
 	@Before
 	public void setUp() throws Exception {
+		System.out.println("------------------Setting up the LinkedLists before testing-------------");
 		// Feel free to use these lists, or add your own
 	    shortList = new MyLinkedList<String>();
 		shortList.add("A");
@@ -42,7 +43,8 @@ public class MyLinkedListTester {
 		list1.add(65);
 		list1.add(21);
 		list1.add(42);
-		System.out.println("shortList size = " + shortList.size);
+		//System.out.println("shortList size = " + shortList.size);
+		System.out.println("---------------------------End of Setup--------------------------------");
 		
 	}
 
@@ -55,6 +57,7 @@ public class MyLinkedListTester {
 	public void testGet()
 	{
 		//test empty list, get should throw an exception
+		System.out.println("------------------Testing to get an element at index-------------");
 		try {
 			emptyList.get(0);
 			fail("Check out of bounds");
@@ -100,7 +103,7 @@ public class MyLinkedListTester {
 		}
 		catch (IndexOutOfBoundsException e) {
 		}
-		
+		System.out.println("--------------End of testing to get an element at index-------------");
 	}
 	
 	
@@ -110,12 +113,29 @@ public class MyLinkedListTester {
 	@Test
 	public void testRemove()
 	{
+		System.out.println("------------------Testing removal of element at index-------------");
 		int a = list1.remove(0);
 		assertEquals("Remove: check a is correct ", 65, a);
 		assertEquals("Remove: check element 0 is correct ", (Integer)21, list1.get(0));
 		assertEquals("Remove: check size is correct ", 2, list1.size());
 		
-		// TODO: Add more tests here
+		try //test for removal of non-existing element at the beginning
+		{
+			a = list1.remove(-1);
+			fail("check out of bounds");
+		}
+		catch (IndexOutOfBoundsException e) {
+		}
+		
+		try //test for removal of non-existing element at the end
+		{
+			a = list1.remove(list1.size);
+			fail("check out of bounds");
+		}
+		catch (IndexOutOfBoundsException e) {
+		}
+		// TODO: Add more tests here - Done
+		System.out.println("-------------End of testing removal of element at index-------------");
 	}
 	
 	/** Test adding an element into the end of the list, specifically
@@ -123,9 +143,21 @@ public class MyLinkedListTester {
 	 * */
 	@Test
 	public void testAddEnd()
+	
 	{
-        // TODO: implement this test
-		
+        System.out.println("------------------Testing to add an element at the end-------------");
+        list1.add(99);
+        assertEquals("testAddEnd: check new last element ", (Integer)99, list1.get(3));
+        assertEquals("testAddEnd: check new size of list1 ", 4, list1.size());
+        
+        try //test for adding empty node - throws NullPointerException
+        {
+        	list1.add(null);
+        }
+        catch (NullPointerException e) {
+        }
+        // TODO: implement this test - Done
+        System.out.println("------------End of testing to add an element at the end-------------");
 	}
 
 	
@@ -133,9 +165,19 @@ public class MyLinkedListTester {
 	@Test
 	public void testSize()
 	{
-		// TODO: implement this test
+		System.out.println("------------------Testing the size of the LinkedList-------------");
+		// TODO: implement this test - Done
+		assertEquals("testSize: check size is correct ", 10, longerList.size());
+		longerList.remove(5);
+		assertEquals("testSize: check size is correct after removal ", 9, longerList.size());
+		longerList.add(99);
+		assertEquals("TestSize: check size is correct after insertion ", 10, longerList.size());
+		longerList.add(5, 101);
+		assertEquals("testSize: check size is correct after adding at index ", 11, longerList.size());
+		
+		assertEquals("testSize: check size is correct in empty list ", 0, emptyList.size());
+		System.out.println("------------End of testing the size of the LinkedList-------------");
 	}
-
 	
 	
 	/** Test adding an element into the list at a specified index,
@@ -145,16 +187,73 @@ public class MyLinkedListTester {
 	@Test
 	public void testAddAtIndex()
 	{
-        // TODO: implement this test
-		
+		System.out.println("------------------Testing adding an element at index-------------");
+		// implement this test - Done
+		// test insert at 0		
+		shortList.add(0, "AA");
+		assertEquals("testAddatIndex: check size is correct ", 3, shortList.size());
+		assertEquals("testAddAtIndex: check first element ", "AA", shortList.get(0));
+		assertEquals("testAddAtIndex: check if old first is now second ", "A", shortList.get(1));
+		// test insert in middle
+		shortList.add(2, "BB");
+		assertEquals("testAddatIndex: check size is correct ", 4, shortList.size());
+		assertEquals("testAddAtIndex: check new element ", "BB", shortList.get(2));
+		assertEquals("testAddAtIndex: check if old third is now fourth ", "B", shortList.get(3));
+		// test insert at end
+		shortList.add(4, "C");
+		assertEquals("testAddAtIndex: check size is correct ", 5, shortList.size());
+		assertEquals("testAddAtIndex: check new element ", "C", shortList.get(4));
+		assertEquals("testAddAtIndex: check if old fourth is still fourth ", "B", shortList.get(3));
+		// test insert at invalid location
+		try { //adding an element outside the list boundaries should throw an IndexOutOfBoundsException
+			shortList.add(7, "Z");
+			fail("Check out of bounds");
+		} 
+		catch (IndexOutOfBoundsException e){
+		}
+		// test inserting an empty element
+		try { //adding an empty element should throw a NullPointerException
+			shortList.add(2, null);
+			fail("Check adding empty element");
+		}
+		catch (NullPointerException e) {
+		}
+		System.out.println("------------End of testing adding an element at index-------------");
 	}
 	
 	/** Test setting an element in the list */
 	@Test
 	public void testSet()
 	{
-	    // TODO: implement this test
-	    
+		System.out.println("---------------Testing to change an existing element at index---------");
+		// TODO: implement this test
+		System.out.println("longerList: " + longerList.toString());
+		// test change at beginning
+		longerList.set(0, 100);
+		assertEquals("testSet: inserting in the middle ", (Integer)100, longerList.get(0));
+		System.out.println("longerList: " + longerList.toString());
+		// test change element in middle
+		longerList.set(5, 99);
+		assertEquals("testSet: inserting in the middle ", (Integer)99, longerList.get(5));
+		System.out.println("longerList: " + longerList.toString());
+		//test change element at the end
+		longerList.set(9, 999);
+		assertEquals("testSet: inserting in at the end ", (Integer)999, longerList.get(9));
+		System.out.println("longerList: " + longerList.toString());
+		// test change non existing element
+		try {
+			longerList.set(12, 12); //inserting at index outside bounds should trigger IndexOutOfBoundsException
+			fail("check out of bounds");
+		}
+		catch (IndexOutOfBoundsException e) {
+		}
+		try {
+			longerList.set(3, null);
+			fail("check setting empty element");
+		}
+		catch (NullPointerException e){
+		}
+		System.out.println("----------End of testing to change an existing element at index---------");
 	}
 	
 	
