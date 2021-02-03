@@ -56,7 +56,7 @@ public class MyLinkedList<E> extends AbstractList<E> {
 	 * @throws IndexOutOfBoundsException if the index is out of bounds. */
 	public E get(int index) 
 	{
-		// TODO: Implement this method.
+		// TODO: Implement this method. - done
 		if(index >= this.size  || index < 0) {
 			throw new IndexOutOfBoundsException("index falls outside size of LinkedList");//return null;
 		}
@@ -82,7 +82,7 @@ public class MyLinkedList<E> extends AbstractList<E> {
 	 */
 	public void add(int index, E element ) 
 	{
-		// TODO: Implement this method
+		// TODO: Implement this method - done
 		if(element.equals(null)) {
 			throw new NullPointerException("Adding an element without any data is not allowed");
 		}
@@ -125,7 +125,7 @@ public class MyLinkedList<E> extends AbstractList<E> {
 	 */
 	public E remove(int index) 
 	{
-		// TODO: Implement this method
+		// TODO: Implement this method - done
 		if(index >= this.size  || index < 0) {
 			throw new IndexOutOfBoundsException("index falls outside size of LinkedList");//return null;
 		}
@@ -153,7 +153,7 @@ public class MyLinkedList<E> extends AbstractList<E> {
 	 */
 	public E set(int index, E element) 
 	{
-		// TODO: Implement this method
+		// TODO: Implement this method - done
 		LLNode<E> returnSearch = new LLNode<E>(null);//new node in order to return data
 		if(element.equals(null)) { //not allowed to add element with no data 
 			throw new NullPointerException("Adding an element without any data is not allowed");
@@ -170,8 +170,7 @@ public class MyLinkedList<E> extends AbstractList<E> {
 					search = search.next;//search initialized with next element 
 				}
 			}
-		} 
-		else {
+		} else {
 			throw new IndexOutOfBoundsException("Cannot insert at given index");
 		}
 		return returnSearch.getData();
