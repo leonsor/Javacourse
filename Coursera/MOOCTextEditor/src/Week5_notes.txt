@@ -1,0 +1,145 @@
+Data Structures and Performance - Week 5 Notes on Trees
+
+Describe the value of trees
+	-	Dynamic data structure
+	-	Structure conveys information
+	Different organizations - Different trees
+		.	root is most important -> Heap
+		.	Organized by character frequency -> Huffman Tree
+		.	Organized by node ordering - Search Trees
+
+Describe a Tree Data Structure
+	Terminology
+	-	top is parent, below is child
+	-	start is root, leaf node has no children
+	-	each node can have only one parent (except root - no parent)
+	-	no cycles in a tree
+	
+Author a TreeNode class
+	in a generic tree a parent can have many children
+	in a Binary tree a parent can only have 2 children at most!
+	Trees have a Linked Structure
+	Tree only needs one 'root' node
+	Each node needs
+	.	A value
+	.	A parent
+	.	A left child
+	.	A right child
+	
+	public class BinaryTree<E> {
+		TreeNode<E> root
+		
+	public class TreeNode<E> {
+		private E value;
+		private TreeNode<E> parent;
+		private TreeNode<E> left;
+		private TreeNode<E> right;
+		
+		public TreeNode(E val, TreeNode<E> par) {
+			this.value = val;
+			this.parent = par;
+			this.left = null;
+			this.right = null;
+		}
+		getters and setters for children
+		public TreeNode<E> addLeftChild(E val) {
+			this.left = new TreeNode<E> (val, this)
+			return this.left;
+		}
+	}
+
+Perform and author a pre-order traversal
+	pre-order: start with root, visit all left sub-trees, than all right sub-trees
+	
+	private void preOrder(TreeNode<E> node) { //with recursion
+		if(node!= null) {
+			node.visit();
+			preOrder(node.getLeftChild());
+			preOrder(node.getRightChild());
+		}
+	}
+	private void preOrder(root) {
+		this.preOrder(root);
+	}
+	
+Perform in-order, post-order and level-order traversals
+	post-order: visit all of your left subtree, visit all of your right subtree, visit yourself
+	in-order: visit all of your left subtree, visit yourself, visit all of your right subtree
+	level-order: each level from left to right (breadth first)
+		Also known as queue -> existing interface in JAVA Queue<E>
+
+	public void levelOrder() {
+		Queue<TreeNode<E>> q = new LinkedList<TreeNode<E>>();
+		q.add(root);
+		while(!q.isEmpty() {
+			TreeNode<E> curr = q.remove();
+			if(curr != null) {
+				curr.visit();
+				q.add(curr.getLeftChild(); //or check if it is null first
+				q.add(curr.getRightChild(); //or check if it is null first
+			}
+		}
+	}
+Define a Binary Search Tree - benefits of a LinkedList and Array
+	1.	Binary Tree
+	2.	left subtrees are less than parent
+	3.	right subtrees are greater than parent
+	There is no rule BSTs are full trees (balanced trees)
+
+Perform Search in a Binary Search Tree
+	use recursion or iteration, keeping track of your current node
+
+Insert an item into a Binary Search Tree
+	Only one place, keeping in mind the rules above (left-right)
+	recursion or iteration
+
+Delete an item from a Binary Search Tree
+	1.	if leaf node (no child), delete parents link
+	2.	if only one child, hoist child (take one level up)
+	3.	if two children, find smallest value in the node's right subtree (left child is NULL)
+		.	replace deleted element value with smallest right tree sub-value
+		.	delete right subtree duplicate
+
+Explain the running time performance to find an item in a BST
+	max distance until leaf is called height of the tree
+	balanced BST have |leftHeight - RightHeight} <= 1
+
+Compare the performance of linked lists and BSTs
+
+				Best Case	Average		Worst Case
+							  Case
+	LinkedList	   O(1)		  O(n)			O(n)
+	BST			   O(1)		O(log n)		O(n)
+	Balanced BST   O(1)		O(log n)		O(log n)
+	
+	to insert into BST in order gives the worst performance!
+	Better to use TreeSet (from JAVA API)
+
+Explain what a Trie data structure is
+	Takes advantage of the shared structure of the stored information
+	reTRIEval is where it comes from
+	-	it's a tree structure
+	-	Nodes can have more than 2 children
+	-	not all nodes have data
+	-	Based on the TrieNode structure
+
+Describe the algorithm for finding keys in and adding keys to a trie
+
+Compare the time to find a key in a BST to a trie
+	for Balanced BST it is O(log n), for Trie it is the lenght of the longest word
+	
+
+Implement a trie data structure in Java
+	public TrieNode {
+		private boolean isWord;
+		private HashMap<Character, TrieNode> children;
+		private String text; //(optional)
+	
+		put(key, value);
+		get(key)
+	}
+	
+Autocomplete:
+	-	Find the stem
+	-	Do a level order traversal from there (breadth-first search)
+	
