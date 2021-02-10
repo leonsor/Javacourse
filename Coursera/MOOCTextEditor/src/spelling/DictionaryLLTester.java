@@ -47,15 +47,18 @@ public class DictionaryLLTester {
 	@Test
 	public void testSize()
 	{
+		System.out.println("----------------------------Start testSize() ----------------------------");
 		assertEquals("Testing size for empty dict", 0, emptyDict.size());
 		assertEquals("Testing size for small dict", 4, smallDict.size());
 		assertEquals("Testing size for large dict", 4438, largeDict.size());
+		System.out.println("----------------------------End testSize() ----------------------------");
 	}
 	
 	/** Test the isWord method */
 	@Test
 	public void testIsWord()
 	{
+		System.out.println("----------------------------Start testIsWord() ----------------------------");
 		assertEquals("Testing isWord on empty: Hello", false, emptyDict.isWord("Hello"));
 		assertEquals("Testing isWord on small: Hello", true, smallDict.isWord("Hello"));
 		assertEquals("Testing isWord on large: Hello", true, largeDict.isWord("Hello"));
@@ -75,15 +78,14 @@ public class DictionaryLLTester {
 		
 		assertEquals("Testing isWord on small: subsequent", true, smallDict.isWord("subsequent"));
 		assertEquals("Testing isWord on large: subsequent", true, largeDict.isWord("subsequent"));
-		
-		
+		System.out.println("----------------------------End testIsWord() ----------------------------");		
 	}
 	
 	/** Test the addWord method */
 	@Test
 	public void addWord()
 	{
-		
+		System.out.println("----------------------------Start addWord() ----------------------------");
 		
 		assertEquals("Asserting hellow is not in empty dict", false, emptyDict.isWord("hellow"));
 		assertEquals("Asserting hellow is not in small dict", false, smallDict.isWord("hellow"));
@@ -120,8 +122,6 @@ public class DictionaryLLTester {
 		
 		assertEquals("Testing isWord on small: subsequent", true, smallDict.isWord("subsequent"));
 		assertEquals("Testing isWord on large: subsequent", true, largeDict.isWord("subsequent"));
-		
-		
+		System.out.println("----------------------------End addWord() ----------------------------");
 	}	
-	
 }
