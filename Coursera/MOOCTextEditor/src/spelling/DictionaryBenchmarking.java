@@ -21,11 +21,11 @@ public class DictionaryBenchmarking {
 		
 	    // The amount of words to increment each step
 	    // You can play around with this
-		int increment = 2000;
+		int increment = 1000;
 
 		// The number of steps to run.  
 		// You can play around with this.
-		int numSteps = 10;
+		int numSteps = 20;
 		
 		// The number of words to start with. 
 		// You can play around with this.

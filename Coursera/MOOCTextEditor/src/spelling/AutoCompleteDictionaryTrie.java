@@ -2,6 +2,7 @@ package spelling;
 
 import java.util.List;
 import java.util.Set;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -40,7 +41,35 @@ public class AutoCompleteDictionaryTrie implements  Dictionary, AutoComplete {
 	public boolean addWord(String word)
 	{
 	    //TODO: Implement this method.
-	    return false;
+		if(word.isEmpty()) { //check for empty word. if empty, return false
+			System.out.println("word is empty, no action."); //TODO Delete after testing
+			return false;
+		} 
+		String insertWord = word.toLowerCase();
+		System.out.println("Invoeg woord = : " + insertWord); //TODO delete after testing
+		// Global algorithm 
+		int i = 0;
+		TrieNode start = root;
+		while(i < insertWord.length()) {
+			TrieNode next = start.insert(insertWord.charAt(i)); //create a new node with next letter, returning null if letter already exists in HashMap of current node
+			if(next.equals(null)) { //if letter already exists
+				if(start.getChild(insertWord.charAt(i)).equals(null)) {// no child exists
+					next =start.insert(insertWord.charAt(i)); // create new node with letter
+					next.setEndsWord(true);//
+					this.size = this.size + 1;
+					return true;
+				}
+				start.setEndsWord(true); //mark this node as end of a word
+				size = size +1; //add 1 to the size of the original tree
+				return true;
+			}
+			else { // new node is created, moving to next character of our word to insert
+				start = next;
+				i++;
+			}
+		}
+
+	    return false; //word was already in the list, no new node is created
 	}
 	
 	/** 
@@ -50,7 +79,7 @@ public class AutoCompleteDictionaryTrie implements  Dictionary, AutoComplete {
 	public int size()
 	{
 	    //TODO: Implement this method
-	    return 0;
+	    return size;
 	}
 	
 	
