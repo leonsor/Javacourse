@@ -1,10 +1,12 @@
 package spelling;
 
 import java.util.List;
+import java.util.Queue;
 import java.util.Set;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
 
 /** 
@@ -41,34 +43,30 @@ public class AutoCompleteDictionaryTrie implements  Dictionary, AutoComplete {
 	public boolean addWord(String word)
 	{
 	    //TODO: Implement this method.
-		if(word.isEmpty()) { //check for empty word. if empty, return false
-			System.out.println("word is empty, no action."); //TODO Delete after testing
+		if(word.isEmpty()|| this.isWord(word)) { //check for empty word. if empty, return false
+			System.out.println("word is empty or already exists, no action."); //TODO Delete after testing
 			return false;
 		} 
 		String insertWord = word.toLowerCase();
 		System.out.println("Invoeg woord = : " + insertWord); //TODO delete after testing
-		// Global algorithm 
-		int i = 0;
+
 		TrieNode start = root;
-		while(i < insertWord.length()) {
-			TrieNode next = start.insert(insertWord.charAt(i)); //create a new node with next letter, returning null if letter already exists in HashMap of current node
-			if(next.equals(null)) { //if letter already exists
-				if(start.getChild(insertWord.charAt(i)).equals(null)) {// no child exists
-					next =start.insert(insertWord.charAt(i)); // create new node with letter
-					next.setEndsWord(true);//
-					this.size = this.size + 1;
-					return true;
-				}
-				start.setEndsWord(true); //mark this node as end of a word
-				size = size +1; //add 1 to the size of the original tree
+		for(int i = 0; i < insertWord.length(); i++) {
+			char c = insertWord.charAt(i);
+			System.out.println("Character to add: " + c); // TODO delete after testing
+			TrieNode next = start.getChild(c);
+			if(next == null) {
+				System.out.println("Char nog niet in trie, nieuwe node gemaakt met char " + c);
+				next = start.insert(c);
+			}
+			if(i == insertWord.length() - 1) {
+				System.out.println("einde van woord gevonden, woord is " + next.getText());
+				next.setEndsWord(true);
+				size += 1;
 				return true;
 			}
-			else { // new node is created, moving to next character of our word to insert
-				start = next;
-				i++;
-			}
+			start = next;
 		}
-
 	    return false; //word was already in the list, no new node is created
 	}
 	
@@ -89,6 +87,37 @@ public class AutoCompleteDictionaryTrie implements  Dictionary, AutoComplete {
 	public boolean isWord(String s) 
 	{
 	    // TODO: Implement this method
+		if(s.isEmpty()) { //check for empty word. if empty, return false
+			System.out.println("word is empty, no action."); //TODO Delete after testing
+			return false;
+		}
+		TrieNode start = root;
+		String searchWord = s.toLowerCase();
+		for(int i = 0; i < s.length(); i++) {
+			if(start == null) {
+				return false;
+			}
+			char c = searchWord.charAt(i);
+			System.out.println("Character to search: " + c); // TODO delete after testing
+			TrieNode next = start.getChild(c);
+			if(next != null) {
+				System.out.println("Char gevonden, zoeken naar volgend character " + c); //TODO delete after testing
+				start = next;
+				if(i == s.length() - 1 && start.endsWord()) {
+					System.out.println("Woord gevonden!");
+					return true;
+				}
+			} 
+			else {
+				if(i == (s.length() - 1) && start.endsWord() && s.equals(start.getText())) {
+					System.out.println("Woord gevonden!");
+					return true;
+				}
+				System.out.println("Woord NIET gevonden!");
+				return false;
+			}
+		}
+		System.out.println("Woord NIET gevonden!");
 		return false;
 	}
 
@@ -129,8 +158,60 @@ public class AutoCompleteDictionaryTrie implements  Dictionary, AutoComplete {
     	 //       If it is a word, add it to the completions list
     	 //       Add all of its child nodes to the back of the queue
     	 // Return the list of completions
-    	 
-         return null;
+    	 List<String> autoCompleteList = new LinkedList<String>();
+    	 Queue<TrieNode> nodeQueue = new LinkedList<TrieNode>();
+    	 TrieNode search = new TrieNode();
+/*    	 if(prefix.equals(null) || !this.isWord(prefix)) {
+    		 return autoCompleteList;
+    	 }*/
+    	 TrieNode start = root;
+    	 String searchWord = prefix.toLowerCase();
+    	 for(int i = 0; i < prefix.length(); i++) {
+    		 if(start == null) {
+ 				return null;
+ 			}
+ 			char c = searchWord.charAt(i);
+ 			System.out.println("Character to search: " + c); // TODO delete after testing
+ 			TrieNode next = start.getChild(c);
+ 			if(next != null) {
+ 				System.out.println("Char gevonden, zoeken naar volgend character " + c); //TODO delete after testing
+ 				start = next;
+ 				if(i == searchWord.length() - 1 && start.endsWord()) {
+ 					System.out.println("Woord gevonden!");
+ 					search = start;
+ 					nodeQueue.add(search);
+ 				}
+ 			} 
+ 			else {
+ 				if(i == (searchWord.length() - 1) && start.endsWord() && searchWord.equals(start.getText())) {
+ 					System.out.println("Woord gevonden!");
+ 					nodeQueue.add(start);
+ 				}
+ 				System.out.println("Woord NIET gevonden!");
+ 				return null;
+ 			}
+ 		}
+    	while(!nodeQueue.isEmpty()) {
+    		TrieNode curr = nodeQueue.remove();
+    		if(curr != null) {
+    			if(curr.endsWord()) {
+    				autoCompleteList.add(curr.getText());
+    				System.out.println("Content of autoCompletelist: " + autoCompleteList.toString()); //TODO Delete after testing
+    			}
+    			TrieNode child = new TrieNode();
+    			Set<Character> set = curr.getValidNextCharacters();
+    			Iterator<Character> it = set.iterator();
+    			while(it.hasNext() || autoCompleteList.size() <= numCompletions) {
+    				child = curr.getChild(it.next());
+    				nodeQueue.add(child);
+    				//autoCompleteList.add(child.getText());
+    			}
+    			if(autoCompleteList.size() <= numCompletions) {
+    				curr = child;
+    			}
+    		}
+    	}
+        return autoCompleteList;
      }
 
  	// For debugging

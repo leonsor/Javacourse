@@ -84,7 +84,7 @@ Define a Binary Search Tree - benefits of a LinkedList and Array
 	1.	Binary Tree
 	2.	left subtrees are less than parent
 	3.	right subtrees are greater than parent
-	There is no rule BSTs are full trees (balanced trees)
+	There is no rule that BSTs are full trees (balanced trees)
 
 Perform Search in a Binary Search Tree
 	use recursion or iteration, keeping track of your current node

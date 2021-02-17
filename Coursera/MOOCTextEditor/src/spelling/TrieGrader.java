@@ -31,7 +31,7 @@ public class TrieGrader {
 
             g.testWordsInOut(ac);
 
-            g.testPredictions(ac);
+//            g.testPredictions(ac);
 
         } catch (Exception e) {
             out.println(g.getFeedback() + "Error during runtime: " + e);
