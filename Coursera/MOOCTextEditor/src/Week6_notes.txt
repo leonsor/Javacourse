@@ -1,0 +1,83 @@
+Data Structures and Performance - Week 6 Notes on Hash Maps
+
+-	Describe why hash tables are valuable and state the running time to find and insert elements into a hash table
+	.	Arrays are very fast to retrieve an element from the array as it runs in O(1) - real time
+	.	If you know where in memory the array starts, the index determines the address of any element
+	.	In a hash table, we take the key (data to store) and through a hash function derive the index.
+	Implications:
+	=	positive: Average O(1) lookup, insert, remove
+	=	negative: Resizing costs and no data ordering
+	
+-	Describe the role of a hash function
+	+	hash functions are used in order to retrieve information from an array.
+	+	K mod N is a common hash function (K is key, N is #elements in array.
+	+	when using characters, transform first to integers (ASCII code)
+	
+-	Describe when collisions occur in hash tables
+	+	If two elements are equal, than their hash values are the same.
+	+	If two elements have the same hash value, they do not have to be equal (collisions)
+	Key part of creating hash functions is trying to minimize collisions.
+	Example: 9 mod 7 and 16 mod 7 both generate a hash code of 2.
+	Solution 1:	Linear Probing
+	.	look for the next open spot and insert it there. 
+	.	when inserting a next value, it ends up underneath the other two.
+		This could become problematic for Search, as we need to look for multiple positions,
+		taking away the advantages of using an array when the table starts getting full.
+	Solution 2: Random Probing
+	.	Jump random # of steps instead of just the next step
+	Alternative solution: Separate Chaining
+	.	just keep a list at each spot (LinkedList)
+	.	Also has some drawbacks
+	Challenge 1: Table full! (Describe how to resize a hash table)
+	If a hash table becomes too full(70% of capacity), the best thing to do is to resize it
+	Requires to create a new table, a new hash function and reinsert everything!
+	Challenge 2: Ordering data!
+	.	In order to get data sorted they have to be pulled out and sorted separately!
+
+-	Use hash tables through Java's built-in classes (HashSet and HashMap)
+	Difference between Hash Set and Hash Map:
+	Hash Set	-	contains index and data
+				-	stores only elements you want to store
+				-	It tells you if an item is in the set or not.
+				-	Example: dictionary
+				Methods: add(E e) and contains(Object o)
+				
+	Hash Map	-	contains index, data(key), data (value)
+				-	stores both a key and some data associated with the key
+				-	Example: movie database (name of movie, list of actors)
+				Methods: get(Object key) and put(K key, V Value)
+				
+-	modular arithmetic explained
+	K mod N is the remainder when we divide K by N -> integer between 0 and N-1
+	Perfect for storing in an array of size N!
+
+-	Describe a detailed algorithm for generating spelling suggestions for misspelled words
+	We want to suggest words that are close to what was typed. What is close?
+	Close == altered as little as possible (1 step away - single character transformation)
+	Misspelled word is speel
+	.	Substitution (choose a single character and replace it by a different character)
+		apeel, sbeel, spell, speek, ...
+	.	Insertion (choose a position in the String and insert a character in that position)
+		bspeel, sipeel, spetel, speele, ...
+	.	Deletion (choose a single character and remove it from the String)
+		peel, seel, spel, spee
+	1.	Generate all strings '1 away' from the original string
+	2.	Discard those that are not words
+	If this does not generate enough solutions, we can go 2 steps down for each string in the first subset
+	
+	Spelling algorithm:
+	Add misspelled word to a queue
+	While not enough words generated and queue not empty:
+		remove the first string from the queue
+		generate 1 away strings from the first string in the queue
+		add these to the queue
+		preserve those that are actual words in a separate list
+		
+	Optional Optimization: Keep track of strings you've seen and don't add them again
+	
+	
+-	Define the notion of edit distance
+
+-	Describe a naïve algorithm for calculating the edit distance between two strings
+
+-	Write Java code to implement spelling suggestions and word paths

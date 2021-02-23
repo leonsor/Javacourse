@@ -1,4 +1,4 @@
-Data Structures and Performance - Week 5 Notes on Trees
+Data Structures and Performance - Week 5 Notes on Trees and Tries
 
 Describe the value of trees
 	-	Dynamic data structure
