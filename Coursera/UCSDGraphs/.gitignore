@@ -1,6 +1,6 @@
 /bin/
 /build/
-/data/
+# /data/
 /libs/
 /.metadata/
 /.settings/
