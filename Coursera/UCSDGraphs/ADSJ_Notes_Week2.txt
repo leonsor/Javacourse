@@ -1,0 +1,105 @@
+Advanced Data Structures in JAVA - Week 1 Notes
+
+Learning Objectives
+
+.	Explain when the Graph abstract data type (ADT) is useful
+	-	Sequential, linear structures like Arrays and Linked lists are useful to iterate over all elements, or access elements through an index.
+	-	Hierarchical structures like trees or tries
+	Basic objects & Relationships between them
+	Graphs:
+		Basic Objects: vertices, nodes			(example: web sites, 	cell phone towers, 		people, 	cities,			tasks)
+		Relationships: edges, arcs and links.	(example: hyperlinks, 	coverage area overlaps, friends, 	nonstop flights,dependencies)
+
+.	Compare the Graph ADT with other ADTs
+
+.	Define basic notions associated with graphs
+	Vertices = V
+	Edges = E (undirected or directed). Max amount of edges: n(n-1) for directed and n(n-1)/2 for undirected graphs.
+	Size of graph: |V| + |E|
+	Weighted edges (importance or costs)
+	Neighbor of v: if there is an edge from v to vertex u OR there is an edge from vertex u to v
+	Path: sequence of vertices and edges that depict hopping along the graph
+	
+.	Write classes in Java to implement graphs
+	-	Vertices (nodes) are represented as Integers
+	-	
+	public abstract class Graph {
+		private int numVertices;
+		private int numEdges;
+		
+		public Graph() {
+			nuVertices = 0;
+			numEdges = 0;
+		}	
+		public getNumVertices {
+			return numVertices;
+		}
+		public getNumEdges {
+			return numEdges;
+		}
+		...
+		public void addVertex( ) {
+			implementAddVertex();
+			numVertices ++;
+		}
+		
+		public abstract void implementAddVertex();
+		// similar for adding edges
+		
+		public abstract List<integer> getNeighbors(int v) ;
+		
+.	Implement graphs in Java using an adjacency matrix representation and an adjacency list representation
+	public class GraphAdjMatrix extends Graph {
+		private int[][] adjMatrix;
+		
+		public void implementAddEdge(int v, int w) {
+			adjMatrix[v][w] = 1;
+		}
+		public void implementAddVertex() {
+			int v = getNumVertices()
+			if(v >= adjMatrix.lenght() { //we have to add a vertex outside the matrix boundaries
+				int[][] newAdjMatrix = new int[v*2][v*2] //create new matrix with double its original size
+				for(int i = 0; i < adjMatrix.lenght; i++) {
+					for(int j = 0; j < adjMatrix.lenght; j++) {
+						newAdjMatrix[i][j] = ajdMatrix[i][j]; //copy old values to new matrix
+					}
+				}
+			}
+			adjMatrix = newAdjMatrix; //rename new matrix to old
+			for (int i = 0; i<adjMatrix.lenght(); i++) {
+				adjMatrix[v][i] =0; // initialize new columns at 0
+			}
+		}
+.	Describe advantages and disadvantages of adjacency list and adjacency matrix representations
+	Adjacency Matrix								Adjacency List
+		2D array size n2								Map with ArrayList of neighbors
+	+ Fast to test for edges						+ Easy and fast to add vertices
+	+ Fast to add/remove edges						+ Easy and fast to add/remove edges
+													+ May use a lot less memory than adjacency matrices (in a sparse graph
+	
+	- Slow to add/remove vertices (array is unchangeable, need to create new array and copy over everything)
+	- Requires a lot of memory						- 
+	
+.	Implement a method in Java to find the neighbors of a vertex in two ways
+	-	Neighbors are vertices that are adjacent.
+	-	In degree: number of incoming edges
+	-	Out degree: number of outgoing edges
+	
+	private int[][] adjMatrix; // Method with adjacency matrix
+	public List<Integer> getNeighbors(int v) {
+		List<Integer> neighbors = ArrayList<Integer>();
+		for(int i = 0; i < adjMatrix.size(); i++) {
+			if(adjMatrix[v][i] != 0) {
+				neighbors.add(i);
+			}
+		}
+	return neighbors;
+	}
+	
+	private Map<Integer, ArrayList<Integer>> adjListMap; // Method with adjacency list
+	public List<Integer> getNeighbors(int v) {
+		return new ArrayList<Integer>(adjListMap.get(v)); //returns new list, not the list stored in the Graph
+	}
+	
+.	Evaluate the performance of this method based on the representation
+
