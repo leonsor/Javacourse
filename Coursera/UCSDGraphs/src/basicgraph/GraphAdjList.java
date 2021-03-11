@@ -96,7 +96,23 @@ public class GraphAdjList extends Graph {
 	 */		
 	 public List<Integer> getDistance2(int v) {
 		 // XXX: Implement this method in week 2
-		 return null;
+		 List<Integer> returnList = new ArrayList<Integer>();  // create return list
+		 List<Integer> neighborV = new ArrayList<Integer>();  // create list of neighbors of v
+//		 Map<Integer,ArrayList<Integer>> neigbor2 = new HashMap<Integer, ArrayList<Integer>>();  // create hashmap of neigbors of v (key) and with their neighbors (list)
+		 neighborV = getNeighbors(v);//get all neigbors of v
+		 System.out.println("Amount of neighbors of " + v + " is: " + neighborV.size());// TODO delete after testing
+		 System.out.println("neighbors are " + neighborV.toString());
+		 for(int i = 0; i < neighborV.size(); i++) { //for each neighbor of v
+			 List<Integer> temp = getNeighbors(neighborV.get(i)); // get all vertices pointing to a neighbor of v
+			 System.out.println("amount of neigbors2  is " + temp.size());//of " + neighborV.get(i) + "
+			 System.out.println("neighbors2 are " + temp.toString());
+			 for(int j = 0; j < temp.size(); j++) { // TODO delete after testing
+				 System.out.println("number is " + temp.get(j));
+				 returnList.add(temp.get(j));// add all 2-step neighbors to return list				 
+			 }
+		 }
+		 return returnList;
+		 //return null;
 	}
 	
 	/**

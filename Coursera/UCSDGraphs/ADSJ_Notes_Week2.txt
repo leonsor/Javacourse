@@ -84,6 +84,11 @@ Learning Objectives
 	-	Neighbors are vertices that are adjacent.
 	-	In degree: number of incoming edges
 	-	Out degree: number of outgoing edges
+	-	Degree: the degree of a vertex is the sum of its in-degree and its out-degree.
+	-	Degree sequence: an ordered list containing the degrees of each of the vertices in a graph, in non-increasing 
+		sorted order (with repetitions).  The degree sequence of a graph is an invariant of the graph and can be used to distinguish 
+		between two graphs and to analyze graph properties. Usually we list the degrees in non-increasing order, that is from largest 
+		degree to smallest degree
 	
 	private int[][] adjMatrix; // Method with adjacency matrix
 	public List<Integer> getNeighbors(int v) {
