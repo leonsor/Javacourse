@@ -1,0 +1,91 @@
+Advanced Data Structures in JAVA - Week 3 Notes
+
+Learning Objectives
+
+1.	Describe how a 2D maze problem can be represented as a graph
+	passable nodes and edges where you can go in one hop
+	
+2.	Represent a geographic map as a graph
+
+3.	Perform Depth-first Search (DFS) and Breadth-first search (BFS) on a graph
+	DFS Algorithm in general: first try up, than left, then down and finally right.
+	.	Need to keep track of where to visit next by using Stack -> push - add element, pop - remove element
+	.	Need to keep track of previous visited modes by using HashSet -> constant time add, remove and find
+	.	Need to keep track of the path from start to finish by using HashMap -> link each node from where it was discovered
+
+	Breadth-first Search (BFS)
+	.	to keep track of where to search next by using Queue -> List where elements are added at one end and removed from the other
+		enqueue - add element, dequeue - remove element
+		
+4.	Implement the code for DFS and BFS
+	DFS(S, G):
+	Initialize stack, visited HashSet and parent HashMap
+	Push S onto the stack and add to visited
+	while stack is not empty
+		pop node curr from top of stack
+		if curr == G return parent map
+		for each of curr's neighbors, n, not in visited set:
+			add n to visited set
+			add curr as n's parent in parent map
+			push n onto the stack
+	// if we get here there is no path
+	
+	Recursively: DFS(S, G, visited, parents):
+		if S == G return;
+		for each of S neighbors, n, not in visited s:
+			add n to visited set
+			add S as n's parent in parents map
+			DFS(n, G, visited, parents)
+
+	BFS(S, G):
+	Initialize queue, visited HashSet and parent HashMap
+	Enqueue S onto the queue and add to visited
+	while queue is not empty
+		dequeue node curr from front of queue
+		if curr == G return parent map
+		for each of curr's neighbors, n, not in visited set:
+			add n to visited set
+			add curr as n's parent in parent map
+			enqueue n onto the queue
+	// if we get here there is no path
+	
+
+5.	Analyze and compare the worst-case running time of DFS and BFS
+
+6.	Describe how the ADTs Stack and Queue work 
+
+7.	Describe how Stacks are used in DFS and how Queues are used in BFS
+
+8.	Design classes to represent a grid-based graph
+	Questions:
+	-	What do I want to do with the graph
+	-	What is the ratio of edges and nodes (Adj List or matrix)
+	-	How do I need to access to nodes/edges
+	-	What properties do nodes and edges need to store 
+	
+	Class Maze
+		MazeNode[][] nodes
+		List bfs(start, goal)
+		List dfs(start, goal)
+		printMaze()
+	
+	Class MazeNode
+		int row, column
+		char dispChar
+		List neighbors
+		getters and setters
+		addNeighbor
+		getNeighbors
+	
+9.	Explain the concepts of redesign and refactoring
+	-	Each method should have ONE task
+	-	We should not expose internal data structures (like returning nodes, better to turn them into coordinates
+	-	Do not be afraid to redesign and refactor as you go
+
+10.	Critique aspects of code design
+	.	Objects that make sense, whose data and methods go together
+	.	Interfaces are clean; private data or data structures are not exposed
+	.	it's easy and fast to do the operations you want to do
+	.	Methods are short and easy to read and understand 
+
+11.	Redesign and refactor code for better design

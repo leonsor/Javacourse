@@ -205,7 +205,25 @@ public class Maze {
 			return new LinkedList<MazeNode>();
 		}
 
-		// reconstruct the path
+		// reconstruct the path --- refactored below
+/*		LinkedList<MazeNode> path = new LinkedList<MazeNode>();
+		MazeNode curr = goal;
+		while (curr != start) {
+			path.addFirst(curr);
+			curr = parentMap.get(curr);
+		}
+		path.addFirst(start);
+		return path;*/
+		return getPath(start, goal, parentMap);
+	}
+	/**
+	 * refactored part of reconstructing the path
+	 * @param start
+	 * @param goal
+	 * @param parentMap
+	 * @return
+	 */
+	private LinkedList<MazeNode> getPath(MazeNode start, MazeNode goal, HashMap<MazeNode, MazeNode> parentMap) {
 		LinkedList<MazeNode> path = new LinkedList<MazeNode>();
 		MazeNode curr = goal;
 		while (curr != start) {
@@ -215,7 +233,6 @@ public class Maze {
 		path.addFirst(start);
 		return path;
 	}
-	
 	
 	/** breadth first search from (startRow,startCol) to (endRow,endCol)
 	 * 

@@ -1,4 +1,4 @@
-Advanced Data Structures in JAVA - Week 1 Notes
+Advanced Data Structures in JAVA - Week 2 Notes
 
 Learning Objectives
 
