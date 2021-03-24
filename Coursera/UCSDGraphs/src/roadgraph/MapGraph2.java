@@ -9,7 +9,6 @@ package roadgraph;
 
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -28,19 +27,19 @@ import util.GraphLoader;
  * Nodes in the graph are intersections between 
  *
  */
-public class MapGraph {
+public class MapGraph2 {
 	//TODO: Add your member variables here in WEEK 3
-	private Set<GeographicPoint> vertices;
-	private Set<Edge> edges;
+	private Set<MapNode> vertices;
+	private Set<Edge2> edge2s;
 	
 	/** 
 	 * Create a new empty MapGraph 
 	 */
-	public MapGraph()
+	public MapGraph2()
 	{
 		// TODO: Implement in this constructor in WEEK 3
-		this.vertices = new HashSet<GeographicPoint>();
-		this.edges = new HashSet<Edge>();
+		this.vertices = new HashSet<MapNode>();
+		this.edge2s = new HashSet<Edge2>();
 	}
 	
 	/**
@@ -57,21 +56,21 @@ public class MapGraph {
 	 * Return the intersections, which are the vertices in this graph.
 	 * @return The vertices in this graph as GeographicPoints
 	 */
-	public Set<GeographicPoint> getVertices()
+	public Set<MapNode> getVertices()
 	{
 		//TODO: Implement this method in WEEK 3
-		Set<GeographicPoint> returnVertices = vertices;
+		Set<MapNode> returnVertices = vertices;
 		return returnVertices;
 	}
 	
 	/**
 	 * Get the number of road segments in the graph
-	 * @return The number of edges in the graph.
+	 * @return The number of edge3s in the graph.
 	 */
 	public int getNumEdges()
 	{
 		//TODO: Implement this method in WEEK 3
-		return edges.size();
+		return edge2s.size();
 	}
 
 	
@@ -87,8 +86,12 @@ public class MapGraph {
 	{
 		// TODO: Implement this method in WEEK 3
 		if(location != null && !vertices.contains(location)) {
+			for(MapNode m:vertices) {
+				if(m.getLocation().equals(location))
+					return false;
+			}
 			System.out.println("Element is added to the Set"); //TODO delete after testing
-			vertices.add(location);
+			vertices.add(new MapNode(location));
 			return true;
 		}
 		System.out.println("Element is not added to the Set"); //TODO delete after testing
@@ -107,14 +110,13 @@ public class MapGraph {
 	 *   added as nodes to the graph, if any of the arguments is null,
 	 *   or if the length is less than 0.
 	 */
-	public void addEdge(GeographicPoint from, GeographicPoint to, String roadName,
+	public void addEdge(MapNode from, MapNode to, String roadName,
 			String roadType, double length) throws IllegalArgumentException {
 		if(from != null && to != null) {
 			if(vertices.contains(from) && vertices.contains(to) && length >= 0) {
-				Edge newEdge = new Edge(from, to, roadName, roadType, length);
-				if(!edges.contains(newEdge)) {
-					edges.add(newEdge);
-					System.out.println("Edge created and added to the Set");
+				Edge2 newEdge2 = new Edge2(from, to, roadName, roadType, length);
+				if(!edge2s.contains(newEdge2)) {
+					edge2s.add(newEdge2);
 				}
 			}
 			else {
@@ -165,49 +167,16 @@ public class MapGraph {
 		Queue<GeographicPoint> queue = new LinkedList<GeographicPoint>();
 		GeographicPoint curr = start;
 		queue.add(curr); //
-		visited.add(curr);
 		while(!queue.isEmpty()) {
-			curr = queue.remove();
-			System.out.println("Current node taken from stack is: " + curr.toString());
+			queue.remove(curr);
 			if(curr.equals(goal)) {
-				//Must re-create route from finish to start
-				ArrayList<GeographicPoint> route = new ArrayList<GeographicPoint>();
-				route.add(curr);
-				while(curr != start) {
-					ArrayList<GeographicPoint> r = parents.get(curr);
-					route.add(r.get(0));
-					curr = r.get(0);
-				}
-				Collections.reverse(route);
-				return route;
+				return parents.get(curr);
 			}
-			ArrayList<GeographicPoint> neighbors = getNeighbors(curr); //get all existing neighbors from curr using the edges
-			System.out.println("Neighbors of " + curr.toString() + " are: " + neighbors.toString()); 
-			//for each of curr's neighbors, n, 
-			for(GeographicPoint n : neighbors) {
-				if(!visited.contains(n)) { // not in visited set:
-					System.out.println(n.toString() + " added to visited");
-					visited.add(n);//add n to visited set
-					nodeSearched.accept(n);
-					ArrayList<GeographicPoint> tempor = parents.get(n); //get current parents from n
-					if(tempor == null) {
-						tempor = new ArrayList<GeographicPoint>();
-						tempor.add(curr);
-						parents.put(n, tempor);
-						System.out.println("New parents Array created, content is : " + tempor.toString());
-					}
-					else {
-						tempor.add(curr);
-						parents.replace(n, tempor);//add curr as n's parent in parent map
-						System.out.println("Current parents Array updated, content is : " + tempor.toString());
-					}
-					queue.add(n);//enqueue n onto the queue
-					System.out.println(n.toString() + " added to the queue");
-				}
-			}
+			
+				
 		}
-		// if we get here there is no path
-		System.out.println("no path found! ");		
+		
+		
 		
 		// Hook for visualization.  See writeup.
 		//nodeSearched.accept(next.getLocation());
@@ -215,15 +184,6 @@ public class MapGraph {
 		return null;
 	}
 	
-	public ArrayList<GeographicPoint> getNeighbors(GeographicPoint curr) {
-		ArrayList<GeographicPoint> neighbors = new ArrayList<GeographicPoint>();
-		for(Edge e:edges) {
-			if(e.getStart().equals(curr)) {
-				neighbors.add(e.getEnd());
-			}
-		}
-		return neighbors;
-	}
 
 	/** Find the path from start to goal using Dijkstra's algorithm
 	 * 
@@ -295,17 +255,13 @@ public class MapGraph {
 	public static void main(String[] args)
 	{
 		System.out.print("Making a new map...");
-		MapGraph firstMap = new MapGraph();
+		MapGraph2 firstMap = new MapGraph2();
 		System.out.print("DONE. \nLoading the map...");
-		GraphLoader.loadRoadMap("data/testdata/simpletest.map", firstMap);
+//		GraphLoader.loadRoadMap("data/testdata/simpletest.map", firstMap);
 		System.out.println("DONE.");
 		
 		// You can use this method for testing.  
-		ArrayList<GeographicPoint> neighbors = firstMap.getNeighbors(new GeographicPoint(4,1)); //testing own method getNeighbors-passed
-		System.out.println(neighbors.toString()); // must result into [4,2] [4,0] [1,1] [5,1] [7,3]
 		
-		List<GeographicPoint> route = firstMap.bfs(new GeographicPoint(1,1), new GeographicPoint(8,-1));
-		System.out.println("Route is : " + route.toString());
 		
 		/* Here are some test cases you should try before you attempt 
 		 * the Week 3 End of Week Quiz, EVEN IF you score 100% on the 

@@ -8,15 +8,15 @@ package roadgraph;
 
 import geography.GeographicPoint;
 
-public class Edge {
+public class Edge2 { //changed attributes from GraphicPoint to MapNode
 	//TODO change GeographicPoint to MapNode
-	private GeographicPoint start;
-	private GeographicPoint end;
+	private MapNode start;
+	private MapNode end;
 	private String roadName;
 	private String roadType;
 	private double length;
 	
-	public Edge(GeographicPoint start, GeographicPoint end, String roadName, String roadType, double length) {
+	public Edge2(MapNode start, MapNode end, String roadName, String roadType, double length) {
 		this.start = start;
 		this.end = end;
 		this.roadName = roadName;
@@ -27,14 +27,14 @@ public class Edge {
 	/**
 	 * @return the start point
 	 */
-	public GeographicPoint getStart() {
+	public MapNode getStart() {
 		return start;
 	}
 
 	/**
 	 * @return the end point
 	 */
-	public GeographicPoint getEnd() {
+	public MapNode getEnd() {
 		return end;
 	}
 
@@ -61,7 +61,7 @@ public class Edge {
 	
 	public String toString() {
 		//TODO change method after implementing mapNode instead of GraphicalPoint
-		return ("From " + this.start.toString() + " to " + this.end.toString() + ", name: " + this.roadName);
+		return ("From " + this.start.getLocation() + " to " + this.end.getLocation() + ", name: " + this.roadName);
 	}
 
 	/**
@@ -69,15 +69,15 @@ public class Edge {
 	 */
 	public static void main(String[] args) {
 		System.out.println("------------Setting up new Edge3 -----------");
-		GeographicPoint start = new GeographicPoint(4,1);
-		GeographicPoint end = new GeographicPoint(7,3);
+		MapNode start = new MapNode(new GeographicPoint(4,1));
+		MapNode end = new MapNode(new GeographicPoint(7,3));
 		String roadName = "front";
 		String roadType = "CityRoad";
 		int length = 4;
 		System.out.println("--------------Creating new edge----------");
-		Edge edge = new Edge(start, end, roadName, roadType, length);
+		Edge2 edge2 = new Edge2(start, end, roadName, roadType, length);
 		System.out.println("--------------printing edge---------------");
-		System.out.println(edge.toString());
+		System.out.println(edge2.toString());
 
 	}
 
