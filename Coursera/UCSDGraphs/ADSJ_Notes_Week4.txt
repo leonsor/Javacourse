@@ -1,0 +1,44 @@
+Advanced Data Structures in JAVA - Week 4 Notes
+
+Learning Objectives
+
+1.	Describe Breadth First Search's value for an unweighted graph
+	-	once the searched node is reached we have found the shortest path. Anything coming after this route will be longer.
+    
+2.	Explain Breadth First Search's limitations for graphs with weighted edges 
+	Still the BFS searches for the less amount of nodes to reach the destiny, therefore this is not the shortest path!
+
+3.  Apply Dijkstra's Algorithm to a weighted graph 
+	Priority Queue: list where to add an {element, priority} to one end and remove the highest priority item from the other
+	-	enqueue	->	add and element, priority}
+	-	dequeue ->	remove the highest priority element
+	Can be implemented using a Heap, which can prioritize low values (Min-Heap) or large values (Max-Heap)
+	
+4.  Write the code to implement Dijkstra's Algorithm
+	Dijkstra (S, G):
+	Initialize Priority queue (PQ), visited HashSet and parent HashMap and distances to infinity
+	Enqueue S, 0 onto the queue 
+	while queue is not empty:
+		dequeue node curr from front of queue
+		If Curr is not visited)
+			add curr to visited set
+			if curr == G return parent map
+			for each of curr's neighbors, n, not in visited set:
+				if path through curr to n is shorter
+					update n's distance
+					update curr as n's parent in parent map
+					enqueue (n, distance) into the PQ
+	// if we get here there is no path
+
+5.  Describe how the ADT Priority Queue works 
+
+
+6.  Describe how Priority Queues are used in Dijkstra's Algorithm 
+
+
+7.  Describe a limitation of Dijkstra's Algorithm 
+
+
+8.  Apply the A* search algorithm to a weighted graph 
+    
+9.	Write the code for A* search
