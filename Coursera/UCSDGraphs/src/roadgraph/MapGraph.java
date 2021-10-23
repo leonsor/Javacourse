@@ -283,6 +283,26 @@ public class MapGraph {
 											 GeographicPoint goal, Consumer<GeographicPoint> nodeSearched)
 	{
 		// TODO: Implement this method in WEEK 4
+		//Initialize open and closed lists
+		//Make the start vertex current
+		//Calculate heuristic distance of start vertex to destination (h)
+		//Calculate f value for start vertex (f = g + h, where g = 0)
+		//WHILE current vertex is not the destination
+		//	FOR each vertex adjacent to current
+		//		IF vertex not in closed list and not in open list THEN
+		//			Add vertex to open list
+		//			Calculate distance from start (g)
+		//			calculate heuristic distance to destination (h)
+		//			Calculate f value (f = g + h)
+		//			IF new f value < existing f value or there is no existing f value THEN
+		//				Update f value
+		//				Set parent to be the current vertex
+		//			END IF
+		//		END IF
+		//	NEXT adjacent vertex
+		//	add current vertex to closed list
+		//	Remove vertex with lowest f value from open list and make it current
+		//END WHILE
 		
 		// Hook for visualization.  See writeup.
 		//nodeSearched.accept(next.getLocation());

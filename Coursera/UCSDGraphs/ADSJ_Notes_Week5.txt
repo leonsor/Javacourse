@@ -1,0 +1,43 @@
+*	Describe the traveling salesperson problem (TSP)
+	Goal: travel to other cities, with min amount of time and min amount of distance
+
+*	Describe several algorithms for solving (both optimally and non-optimally) the TSP
+	-	Greedy algorithm: pick the best next choice.
+		Does not work for unweighted graphs
+	-	Brute Force Algorithm: try all combinations
+		Does work but takes a lot of time -> (n-1)!
+
+*	Analyze whether an algorithm optimally solves the TSP
+
+*	Analyze the running time for several TSP algorithms
+	-	Brute force: (n-1)! * n = O(n!)
+	-	Greedy algorithm: (n-1)*n = O(n2)
+	
+*	Explain the notion of an NP-Hard problem
+	-	NP: Some problems seem harder to find solutions, but it is still easy to verify solution correctness.
+	-	NP-Complete: No known polynomial time algorithm to find a solution, but can check a solution in polynomial time.
+	-	NP-Hard: Problems are at least as difficult to solve as hardest problems in NP
+
+*	Explain the value (and limitations) of identifying a problem is NP-Hard
+
+*	Use heuristics to find reasonable solutions to hard problems
+	-	
+
+*	Apply the 2-Opt Heuristic to the TSP 
+
+*	Define a Hamiltonian cycle in a graph
+	-	A Hamiltonian cycle is a path through the graph that visits every vertex exactly once and then returns to its start vertex.
+
+*	Determine, for small examples, whether a graph is Hamiltonian (done)
+
+*	Describe an algorithm deciding whether a graph is Hamiltonian and analyze its efficiency
+	-	
+
+*	Define an Eulerian circuit in a graph
+	-	A  graph is Eulerian if there is a path through the graph which visits each edge exactly once. 
+
+*	Determine, for small examples, whether a graph is Eulerian (done)
+
+*	Describe an algorithm deciding whether a graph is Eulerian and analyze its efficiency
+	-	at most 2 vertices of odd degree (start and end vertex)
+	-	Other vertices must be even degree
