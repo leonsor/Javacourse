@@ -9,14 +9,14 @@ package roadgraph;
 import geography.GeographicPoint;
 
 public class Edge2 { //changed attributes from GraphicPoint to MapNode
-	//TODO change GeographicPoint to MapNode
-	private MapNode start;
-	private MapNode end;
+	//TODO change GeographicPoint to MapNode - Done
+	private MapNode2 start;
+	private MapNode2 end;
 	private String roadName;
 	private String roadType;
 	private double length;
 	
-	public Edge2(MapNode start, MapNode end, String roadName, String roadType, double length) {
+	public Edge2(MapNode2 start, MapNode2 end, String roadName, String roadType, double length) {
 		this.start = start;
 		this.end = end;
 		this.roadName = roadName;
@@ -27,14 +27,14 @@ public class Edge2 { //changed attributes from GraphicPoint to MapNode
 	/**
 	 * @return the start point
 	 */
-	public MapNode getStart() {
+	public MapNode2 getStart() {
 		return start;
 	}
 
 	/**
 	 * @return the end point
 	 */
-	public MapNode getEnd() {
+	public MapNode2 getEnd() {
 		return end;
 	}
 
@@ -68,9 +68,9 @@ public class Edge2 { //changed attributes from GraphicPoint to MapNode
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		System.out.println("------------Setting up new Edge3 -----------");
-		MapNode start = new MapNode(new GeographicPoint(4,1));
-		MapNode end = new MapNode(new GeographicPoint(7,3));
+		System.out.println("------------Setting up new Edge2 -----------");
+		MapNode2 start = new MapNode2(new GeographicPoint(4,1));
+		MapNode2 end = new MapNode2(new GeographicPoint(7,3));
 		String roadName = "front";
 		String roadType = "CityRoad";
 		int length = 4;

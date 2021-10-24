@@ -29,7 +29,7 @@ import util.GraphLoader;
  */
 public class MapGraph2 {
 	//TODO: Add your member variables here in WEEK 3
-	private Set<MapNode> vertices;
+	private Set<MapNode2> vertices;
 	private Set<Edge2> edge2s;
 	
 	/** 
@@ -38,7 +38,7 @@ public class MapGraph2 {
 	public MapGraph2()
 	{
 		// TODO: Implement in this constructor in WEEK 3
-		this.vertices = new HashSet<MapNode>();
+		this.vertices = new HashSet<MapNode2>();
 		this.edge2s = new HashSet<Edge2>();
 	}
 	
@@ -56,10 +56,10 @@ public class MapGraph2 {
 	 * Return the intersections, which are the vertices in this graph.
 	 * @return The vertices in this graph as GeographicPoints
 	 */
-	public Set<MapNode> getVertices()
+	public Set<MapNode2> getVertices()
 	{
 		//TODO: Implement this method in WEEK 3
-		Set<MapNode> returnVertices = vertices;
+		Set<MapNode2> returnVertices = vertices;
 		return returnVertices;
 	}
 	
@@ -86,12 +86,12 @@ public class MapGraph2 {
 	{
 		// TODO: Implement this method in WEEK 3
 		if(location != null && !vertices.contains(location)) {
-			for(MapNode m:vertices) {
+			for(MapNode2 m:vertices) {
 				if(m.getLocation().equals(location))
 					return false;
 			}
 			System.out.println("Element is added to the Set"); //TODO delete after testing
-			vertices.add(new MapNode(location));
+			vertices.add(new MapNode2(location));
 			return true;
 		}
 		System.out.println("Element is not added to the Set"); //TODO delete after testing
@@ -110,7 +110,7 @@ public class MapGraph2 {
 	 *   added as nodes to the graph, if any of the arguments is null,
 	 *   or if the length is less than 0.
 	 */
-	public void addEdge(MapNode from, MapNode to, String roadName,
+	public void addEdge(MapNode2 from, MapNode2 to, String roadName,
 			String roadType, double length) throws IllegalArgumentException {
 		if(from != null && to != null) {
 			if(vertices.contains(from) && vertices.contains(to) && length >= 0) {
@@ -257,7 +257,7 @@ public class MapGraph2 {
 		System.out.print("Making a new map...");
 		MapGraph2 firstMap = new MapGraph2();
 		System.out.print("DONE. \nLoading the map...");
-//		GraphLoader.loadRoadMap("data/testdata/simpletest.map", firstMap);
+		//GraphLoader.loadRoadMap("data/testdata/simpletest.map", firstMap);
 		System.out.println("DONE.");
 		
 		// You can use this method for testing.  
